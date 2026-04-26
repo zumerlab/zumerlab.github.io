@@ -1,27 +1,776 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Zumerlab introduction page with a short company description and products: Orbit, Zumly, and Snapdom."
-    />
-    <title>Zumerlab</title>
-  </head>
-  <body>
-    <main>
-      <h1>Welcome to Zumerlab</h1>
-      <p>
-        Zumerlab is a creative software studio focused on building practical
-        tools and modern web experiences.
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zumerlab — A small lab building unusual web tools</title>
+<meta name="description" content="Zumerlab is an independent software lab building open-source web primitives: Orbit (radial CSS UIs), Zumly (zoom navigation), and snapDOM (DOM capture)." />
+<meta property="og:title" content="Zumerlab" />
+<meta property="og:description" content="An independent software lab building open-source web primitives." />
+<meta property="og:url" content="https://zumerlab.com" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg-elev: #111113;
+    --ink: #ebe8e0;
+    --ink-dim: #8a8780;
+    --ink-faint: #3a3a3c;
+    --rule: #1f1f22;
+    --accent: #3afff0;
+    --warn: #ff5b1f;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Background grid + scanlines */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: 96px 96px;
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 90%);
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      rgba(255,255,255,0.012) 3px,
+      rgba(255,255,255,0.012) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible { outline: 1px dashed var(--accent); outline-offset: 4px; }
+
+  .wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ─── TOP BAR ─────────────────────────────────────────────── */
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--ink-faint);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .topbar .left { display: flex; gap: 18px; }
+  .topbar .center { color: var(--ink); }
+  .topbar .right { text-align: right; display: flex; gap: 18px; justify-content: flex-end; }
+  .brand-mark {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+  .pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pulse::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+    animation: blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ─── HERO ────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding: 120px 0 100px;
+    border-bottom: 1px dashed var(--ink-faint);
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 56px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .hero-meta .row { display: flex; gap: 14px; }
+  .hero-meta .row span:first-child { color: var(--ink-faint); }
+  .hero-meta .right { text-align: right; justify-content: flex-end; }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(48px, 9vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero h1 .slash {
+    color: var(--ink-faint);
+    font-style: normal;
+    margin: 0 0.1em;
+  }
+  .hero h1 em.typed {
+    display: inline-block;
+    min-width: 11ch;
+    text-align: left;
+  }
+  .hero h1 .caret {
+    display: inline-block;
+    margin-left: 0.04em;
+    color: var(--accent);
+    font-style: normal;
+    transform: translateY(-0.05em);
+    animation: caret-blink 0.85s step-end infinite;
+  }
+  @keyframes caret-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero h1 .caret { animation: none; }
+  }
+
+  .hero-sub {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    max-width: 100%;
+  }
+  .hero-sub .lead {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 28ch;
+  }
+  .hero-sub .lead em { color: var(--accent); }
+  .hero-sub .desc {
+    color: var(--ink-dim);
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+  .hero-sub .desc p + p { margin-top: 14px; }
+
+  /* Crosshair corner markers */
+  .crosshair {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--accent);
+  }
+  .crosshair::before, .crosshair::after {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+  }
+  .crosshair::before { left: 9px; top: 0; width: 1px; height: 20px; }
+  .crosshair::after { left: 0; top: 9px; width: 20px; height: 1px; }
+  .crosshair.tl { top: 64px; left: 16px; }
+  .crosshair.tr { top: 64px; right: 16px; }
+  .crosshair.bl { bottom: 16px; left: 16px; }
+  .crosshair.br { bottom: 16px; right: 16px; }
+
+  /* Floating radial diagram (nod to Orbit) */
+  .orbit-mark {
+    position: absolute;
+    top: 90px;
+    right: 60px;
+    width: 180px;
+    height: 180px;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .orbit-mark svg { width: 100%; height: 100%; }
+  .orbit-mark .ring { fill: none; stroke: var(--ink-faint); stroke-width: 1; }
+  .orbit-mark .ring.live { stroke: var(--accent); stroke-dasharray: 2 4; animation: spin 22s linear infinite; transform-origin: center; }
+  .orbit-mark .dot { fill: var(--accent); }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ─── SECTION HEADER ──────────────────────────────────────── */
+  .section {
+    padding: 80px 0;
+    border-bottom: 1px dashed var(--ink-faint);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    margin-bottom: 56px;
+  }
+  .section-head .tag {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    border-top: 1px solid var(--ink);
+    padding-top: 8px;
+    align-self: start;
+  }
+  .section-head .title {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.1;
+    color: var(--ink);
+    max-width: 24ch;
+  }
+  .section-head .title em { font-style: italic; color: var(--accent); }
+
+  /* ─── ABOUT ───────────────────────────────────────────────── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 40px;
+  }
+  .about-grid .col-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+  .about-grid p {
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+  .about-grid p + p { margin-top: 16px; }
+  .about-grid .principles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    color: var(--ink-dim);
+    font-size: 13px;
+  }
+  .about-grid .principles li {
+    list-style: none;
+    padding-left: 18px;
+    position: relative;
+  }
+  .about-grid .principles li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  /* ─── SPECIMENS / PRODUCTS ────────────────────────────────── */
+  .specimens { display: flex; flex-direction: column; }
+
+  .specimen {
+    display: grid;
+    grid-template-columns: 120px 1fr 1.2fr 200px;
+    gap: 40px;
+    padding: 48px 0;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+    position: relative;
+    transition: background 0.3s ease;
+  }
+  .specimen:hover {
+    background: linear-gradient(to right, transparent, rgba(58, 255, 240, 0.025), transparent);
+  }
+  .specimen:hover .spec-id { color: var(--accent); }
+  .specimen:hover .spec-glyph { transform: scale(1.05); }
+
+  .spec-id {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+  .spec-id .num { display: block; font-size: 28px; font-family: var(--serif); color: var(--ink); margin-top: 6px; }
+
+  .spec-name {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .spec-name h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .spec-name h3 em { color: var(--accent); font-style: italic; }
+  .spec-name .tagline {
+    color: var(--ink-dim);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .spec-name .meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 6px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+  .spec-name .meta span::before { content: '⌁ '; color: var(--accent); }
+
+  .spec-desc {
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 50ch;
+  }
+  .spec-desc p + p { margin-top: 12px; color: var(--ink-dim); }
+
+  .spec-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .spec-links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--ink-faint);
+    padding: 10px 12px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: all 0.2s ease;
+  }
+  .spec-links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateX(-2px);
+  }
+  .spec-links a::after {
+    content: '↗';
+    margin-left: 12px;
+    color: var(--ink-dim);
+    transition: transform 0.2s ease;
+  }
+  .spec-links a:hover::after { color: var(--accent); transform: translate(2px, -2px); }
+
+  /* Specimen glyphs (small visual signature for each) */
+  .spec-glyph {
+    position: absolute;
+    top: 48px;
+    right: 220px;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    transition: transform 0.4s ease;
+  }
+  .spec-glyph svg { width: 100%; height: 100%; }
+  .glyph-stroke { stroke: var(--ink-faint); fill: none; stroke-width: 1; }
+  .glyph-accent { stroke: var(--accent); fill: none; stroke-width: 1; }
+  .glyph-fill { fill: var(--accent); }
+
+  /* ─── REPOS LIST ──────────────────────────────────────────── */
+  .repos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .repo {
+    background: var(--bg);
+    padding: 20px;
+    transition: background 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .repo:hover { background: var(--bg-elev); }
+  .repo .name {
+    font-size: 14px;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .repo .name::before { content: '/ '; color: var(--accent); }
+  .repo .blurb { color: var(--ink-dim); font-size: 12px; line-height: 1.5; }
+
+  /* ─── FOOTER ──────────────────────────────────────────────── */
+  footer {
+    padding: 60px 0 40px;
+    color: var(--ink-dim);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  footer .top {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+  footer .col h4 {
+    color: var(--ink-faint);
+    font-weight: 400;
+    margin-bottom: 14px;
+    font-size: 10px;
+  }
+  footer .col a { display: block; color: var(--ink); margin-bottom: 8px; text-transform: none; letter-spacing: 0.04em; font-size: 13px; }
+  footer .col a:hover { color: var(--accent); }
+  footer .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 32px;
+    border-top: 1px dashed var(--ink-faint);
+    padding-top: 24px;
+  }
+  footer .ascii {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    line-height: 1.2;
+    white-space: pre;
+    text-transform: none;
+  }
+
+  /* ─── RESPONSIVE ──────────────────────────────────────────── */
+  @media (max-width: 880px) {
+    .wrap { padding: 0 20px; }
+    .topbar { font-size: 10px; }
+    .topbar .left, .topbar .right { gap: 10px; }
+    .topbar .center { display: none; }
+    .hero { padding: 60px 0 70px; }
+    .hero-meta { grid-template-columns: 1fr; }
+    .hero-meta .right { text-align: left; justify-content: flex-start; }
+    .hero-sub { grid-template-columns: 1fr; gap: 28px; }
+    .orbit-mark { display: none; }
+    .crosshair { display: none; }
+    .section-head { grid-template-columns: 1fr; gap: 16px; }
+    .about-grid { grid-template-columns: 1fr; gap: 16px; }
+    .specimen { grid-template-columns: 1fr; gap: 18px; padding: 36px 0; }
+    .spec-name h3 { font-size: 36px; }
+    .spec-glyph { display: none; }
+    footer .top { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ─── TOP BAR ──────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="left">
+      <span class="brand-mark">ZUMERLAB</span>
+    </div>
+    <div class="center"></div>
+    <div class="right">
+      <a href="https://github.com/zumerlab" target="_blank" rel="noopener">github</a>
+      <a href="#specimens">specimens</a>
+      <a href="#contact">contact</a>
+    </div>
+  </header>
+
+  <!-- ─── HERO ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="crosshair tl"></div>
+    <div class="crosshair tr"></div>
+    <div class="crosshair bl"></div>
+    <div class="crosshair br"></div>
+
+    <div class="orbit-mark" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <circle class="ring" cx="100" cy="100" r="90" />
+        <circle class="ring" cx="100" cy="100" r="64" />
+        <circle class="ring live" cx="100" cy="100" r="42" />
+        <circle class="ring" cx="100" cy="100" r="20" />
+        <circle class="dot" cx="100" cy="10" r="3" />
+        <circle class="dot" cx="142" cy="100" r="2" />
+      </svg>
+    </div>
+
+    <div class="hero-meta">
+      <div class="row"><span>FILE</span><span>zumerlab.com / index</span></div>
+      <div class="row right"><span>VER</span><span>2026.04 — public</span></div>
+      <div class="row"><span>NODE</span><span>independent / open-source</span></div>
+      <div class="row right"><span>FIELD</span><span>web platform primitives</span></div>
+    </div>
+
+    <h1>
+      A small lab<br />
+      building <em class="typed"><span class="typed-text">unusual</span><span class="caret" aria-hidden="true">▋</span></em><span class="slash">/</span><br />
+      web tools.
+    </h1>
+
+    <div class="hero-sub">
+      <p class="lead">
+        We make the kind of libraries we wish already existed —
+        <em>radial layouts</em>, <em>zoom-driven UIs</em>, <em>pixel-perfect DOM capture</em>.
       </p>
-      <h2>Products</h2>
-      <ul>
-        <li><strong>Orbit</strong> - A platform for structured project workflows.</li>
-        <li><strong>Zumly</strong> - A framework for dynamic user interfaces.</li>
-        <li><strong>Snapdom</strong> - A utility for fast DOM snapshots.</li>
+      <div class="desc">
+        <p>Zumerlab is an independent software studio. We work in the open: every primitive ships with source, docs, and a live demo. No frameworks of frameworks, no vendor lock-in.</p>
+        <p>Below: the active specimens. Each is in production use, MIT-licensed, and maintained.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ────────────────────────────────────────── -->
+  <section class="section" id="about">
+    <div class="section-head">
+      <div class="tag">§ 01 / About</div>
+      <h2 class="title">Built by people who treat <em>the browser</em> as a research surface.</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="col-label">Premise</div>
+      <div>
+        <p>Most of what the web platform can do is still under-explored. There are angles, depths, and capture surfaces that designers reach for every week and re-implement from scratch.</p>
+        <p>Zumerlab focuses on those gaps. Small, sharp tools that ship with no transitive dependencies and a permissive license.</p>
+      </div>
+      <ul class="principles">
+        <li>Open-source by default — MIT, public from day one</li>
+        <li>Zero or near-zero runtime dependencies</li>
+        <li>Live demos, not just screenshots</li>
+        <li>Framework-agnostic; works with plain HTML</li>
+        <li>Designed in the open on GitHub</li>
       </ul>
-    </main>
-  </body>
+    </div>
+  </section>
+
+  <!-- ─── SPECIMENS ────────────────────────────────────── -->
+  <section class="section" id="specimens">
+    <div class="section-head">
+      <div class="tag">§ 02 / Specimens</div>
+      <h2 class="title">Three primitives, <em>actively maintained</em>, in production.</h2>
+    </div>
+
+    <div class="specimens">
+
+      <!-- Orbit -->
+      <article class="specimen">
+        <div class="spec-id">SPC<span class="num">001</span></div>
+        <div class="spec-glyph" aria-hidden="true">
+          <svg viewBox="0 0 80 80">
+            <circle class="glyph-stroke" cx="40" cy="40" r="34" />
+            <circle class="glyph-stroke" cx="40" cy="40" r="22" />
+            <circle class="glyph-accent" cx="40" cy="40" r="10" />
+            <line x1="40" y1="6" x2="40" y2="74" class="glyph-stroke" stroke-dasharray="2 3" />
+          </svg>
+        </div>
+        <div class="spec-name">
+          <h3><em>Orbit</em></h3>
+          <span class="tagline">CSS framework / radial UIs</span>
+          <div class="meta">
+            <span>@zumer/orbit</span>
+            <span>MIT</span>
+          </div>
+        </div>
+        <div class="spec-desc">
+          <p>A CSS framework for building radial interfaces — gauges, donuts, knobs, pie menus, dashboards — using only CSS. No layout JavaScript.</p>
+          <p>Drop in two files. Works with plain HTML and any framework (React, Vue, Svelte). Angles, radii, and positions are computed in stylesheets.</p>
+        </div>
+        <div class="spec-links">
+          <a href="https://zumerlab.github.io/orbit-docs/" target="_blank" rel="noopener">Live docs</a>
+          <a href="https://github.com/zumerlab/orbit" target="_blank" rel="noopener">Source</a>
+          <a href="https://www.npmjs.com/package/@zumer/orbit" target="_blank" rel="noopener">npm</a>
+        </div>
+      </article>
+
+      <!-- Zumly -->
+      <article class="specimen">
+        <div class="spec-id">SPC<span class="num">002</span></div>
+        <div class="spec-glyph" aria-hidden="true">
+          <svg viewBox="0 0 80 80">
+            <rect x="14" y="14" width="52" height="52" class="glyph-stroke" />
+            <rect x="24" y="24" width="32" height="32" class="glyph-stroke" />
+            <rect x="32" y="32" width="16" height="16" class="glyph-accent" />
+            <line x1="14" y1="14" x2="32" y2="32" class="glyph-stroke" stroke-dasharray="2 2" />
+            <line x1="66" y1="14" x2="48" y2="32" class="glyph-stroke" stroke-dasharray="2 2" />
+            <line x1="14" y1="66" x2="32" y2="48" class="glyph-stroke" stroke-dasharray="2 2" />
+            <line x1="66" y1="66" x2="48" y2="48" class="glyph-stroke" stroke-dasharray="2 2" />
+          </svg>
+        </div>
+        <div class="spec-name">
+          <h3><em>Zumly</em></h3>
+          <span class="tagline">JS library / Z over XY</span>
+          <div class="meta">
+            <span>zumly</span>
+            <span>MIT</span>
+          </div>
+        </div>
+        <div class="spec-desc">
+          <p>Hierarchical zoom navigation: you move in Z (depth) through discrete views laid out in the XY plane. Spatial transitions instead of flat screen swaps.</p>
+          <p>Pluggable transition drivers (CSS, WAAPI, Anime.js, GSAP, Motion). Plugin API, hash router, prefetch cache. UI-agnostic.</p>
+        </div>
+        <div class="spec-links">
+          <a href="https://zumerlab.github.io/zumly/" target="_blank" rel="noopener">Live demo</a>
+          <a href="https://github.com/zumerlab/zumly" target="_blank" rel="noopener">Source</a>
+          <a href="https://www.npmjs.com/package/zumly" target="_blank" rel="noopener">npm</a>
+        </div>
+      </article>
+
+      <!-- snapDOM -->
+      <article class="specimen">
+        <div class="spec-id">SPC<span class="num">003</span></div>
+        <div class="spec-glyph" aria-hidden="true">
+          <svg viewBox="0 0 80 80">
+            <rect x="10" y="10" width="44" height="44" class="glyph-stroke" />
+            <rect x="26" y="26" width="44" height="44" class="glyph-accent" />
+            <line x1="10" y1="10" x2="26" y2="26" class="glyph-stroke" stroke-dasharray="2 2" />
+            <line x1="54" y1="10" x2="70" y2="26" class="glyph-stroke" stroke-dasharray="2 2" />
+            <circle cx="48" cy="48" r="2" class="glyph-fill" />
+          </svg>
+        </div>
+        <div class="spec-name">
+          <h3><em>snapDOM</em></h3>
+          <span class="tagline">Utility / DOM-to-image capture</span>
+          <div class="meta">
+            <span>@zumer/snapdom</span>
+            <span>MIT</span>
+          </div>
+        </div>
+        <div class="spec-desc">
+          <p>Captures any HTML element as a scalable SVG image — preserving styles, fonts, background images, pseudo-elements, and shadow DOM.</p>
+          <p>Exports to SVG, PNG, JPG, WebP, canvas, or Blob. Supports same-origin iframes, CSS counters, line-clamp. Zero dependencies.</p>
+        </div>
+        <div class="spec-links">
+          <a href="https://zumerlab.github.io/snapdom/" target="_blank" rel="noopener">Live demo</a>
+          <a href="https://github.com/zumerlab/snapdom" target="_blank" rel="noopener">Source</a>
+          <a href="https://www.npmjs.com/package/@zumer/snapdom" target="_blank" rel="noopener">npm</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ──────────────────────────────────────── -->
+  <section class="section" id="contact">
+    <div class="section-head">
+      <div class="tag">§ 03 / Signal</div>
+      <h2 class="title">Want to <em>collaborate</em>, sponsor, or just say hi?</h2>
+    </div>
+    <div class="about-grid">
+      <div class="col-label">Channels</div>
+      <div>
+        <p style="font-family: var(--serif); font-size: 22px; line-height: 1.5;">Open an issue, send a PR, or follow along on GitHub. Sponsorships keep the lab open.</p>
+      </div>
+      <ul class="principles">
+        <li><a href="https://github.com/zumerlab" target="_blank" rel="noopener">github.com/zumerlab</a></li>
+        <li><a href="https://github.com/sponsors/tinchox5" target="_blank" rel="noopener">github.com/sponsors/tinchox5</a></li>
+        <li><a href="https://www.npmjs.com/~zumer" target="_blank" rel="noopener">npmjs.com/~zumer</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ───────────────────────────────────────── -->
+  <footer>
+    <div class="top">
+      <div class="col">
+        <h4>Lab</h4>
+        <a href="#about">About</a>
+        <a href="#specimens">Specimens</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="col">
+        <h4>Specimens</h4>
+        <a href="https://github.com/zumerlab/orbit" target="_blank" rel="noopener">Orbit</a>
+        <a href="https://github.com/zumerlab/zumly" target="_blank" rel="noopener">Zumly</a>
+        <a href="https://github.com/zumerlab/snapdom" target="_blank" rel="noopener">snapDOM</a>
+      </div>
+      <div class="col">
+        <h4>Find us</h4>
+        <a href="https://github.com/zumerlab" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.npmjs.com/~zumer" target="_blank" rel="noopener">npm</a>
+      </div>
+      <div class="col">
+        <h4>License</h4>
+        <a>MIT — open source</a>
+        <a>Made with care</a>
+      </div>
+    </div>
+    <div class="bottom">
+      <div>© ZUMERLAB / ALL EXPERIMENTS PUBLIC</div>
+      <pre class="ascii">  ◯ ─ ─ ─ ●
+   \\       \\
+    \\       \\
+     ● ─ ─ ─ ◯</pre>
+      <div>END / TRANSMISSION</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const el = document.querySelector('.typed-text');
+    if (!el) return;
+    const words = ['unusual', 'unconventional', 'yet useful'];
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    (async function loop() {
+      let i = 0;
+      await sleep(900);
+      while (true) {
+        const w = words[i];
+        for (let c = 1; c <= w.length; c++) {
+          el.textContent = w.slice(0, c);
+          await sleep(85);
+        }
+        await sleep(1700);
+        for (let c = w.length; c >= 0; c--) {
+          el.textContent = w.slice(0, c);
+          await sleep(38);
+        }
+        await sleep(280);
+        i = (i + 1) % words.length;
+      }
+    })();
+  })();
+</script>
+
+</body>
 </html>
