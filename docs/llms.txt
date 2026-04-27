@@ -1,0 +1,35 @@
+# Zumerlab
+
+> Zumerlab is an independent software lab building open-source web primitives. We make small, sharp, framework-agnostic libraries with zero or near-zero runtime dependencies, all MIT-licensed and developed in the open on GitHub.
+
+Zumerlab maintains three production libraries — **Orbit** (CSS framework for radial UIs), **Zumly** (hierarchical zoom navigation), and **snapDOM** (DOM-to-image capture). Each library ships with source, live demos, and documentation. They are designed to work with plain HTML and any framework (React, Vue, Svelte).
+
+## Products
+
+- [Orbit](https://zumerlab.github.io/orbit-docs/): A CSS framework for building radial UIs — gauges, donuts, knobs, pie menus, dashboards — with CSS only. No layout JavaScript. Works with plain HTML and any framework. Drop in two files. Structure: `bigbang` (container) → `gravity-spot` (center) → `orbit-N` (ring level) → `o-progress` or `o-arc` elements. Installable via `npm install @zumer/orbit` or CDN.
+- [Zumly](https://zumerlab.github.io/zumly/): A JavaScript library for hierarchical zoom navigation — moving in Z (depth) through discrete views laid out in the XY plane, with spatial transitions instead of flat screen swaps. Pluggable transition drivers (CSS, WAAPI, Anime.js, GSAP, Motion, custom). Plugin API, hash router, prefetch cache. UI-agnostic. Installable via `npm install zumly`.
+- [snapDOM](https://zumerlab.github.io/snapdom/): A fast and accurate DOM-to-image capture tool. Captures any HTML element as a scalable SVG image, preserving styles, fonts, background images, pseudo-elements, and shadow DOM. Exports to SVG, PNG, JPG, WebP, canvas, or Blob. Supports same-origin iframes, CSS counters, line-clamp. Zero dependencies. Originally built for Zumly. Installable via `npm install @zumer/snapdom`.
+
+## Source code
+
+- [Orbit on GitHub](https://github.com/zumerlab/orbit): Source repository for Orbit CSS framework.
+- [Zumly on GitHub](https://github.com/zumerlab/zumly): Source repository for Zumly zoom navigation library.
+- [snapDOM on GitHub](https://github.com/zumerlab/snapdom): Source repository for snapDOM capture tool.
+- [Zumerlab on GitHub](https://github.com/zumerlab): Organization page with all repositories.
+
+## Packages
+
+- [@zumer/orbit on npm](https://www.npmjs.com/package/@zumer/orbit): npm package for Orbit.
+- [zumly on npm](https://www.npmjs.com/package/zumly): npm package for Zumly.
+- [@zumer/snapdom on npm](https://www.npmjs.com/package/@zumer/snapdom): npm package for snapDOM.
+
+## Documentation
+
+- [Orbit docs](https://zumerlab.github.io/orbit-docs/): Live showcase and full documentation for Orbit, including component API, examples, and theming.
+- [Zumly README](https://github.com/zumerlab/zumly#readme): Full reference for Zumly: installation, view sources, transition drivers, plugin API, hash router, geometry optimization.
+- [snapDOM README](https://github.com/zumerlab/snapdom#readme): Full reference for snapDOM: installation, basic usage, API, options, supported features.
+
+## Optional
+
+- [Sponsor on GitHub](https://github.com/sponsors/tinchox5): Sponsorship page that helps keep the lab open.
+- [Adjacent repositories](https://github.com/zumerlab): Smaller experiments include `orbit-docs`, `orbit-integrations`, `orbit-assistant`, and `snapBOX`.
