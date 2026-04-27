@@ -4,7 +4,7 @@
       <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1f1f22" stroke-width="1"/>
     </pattern>
   </defs>
-  <rect width="1200" height="630" fill="#0a0a0b"/>
+  <rect width="1200" height="630" fill="#041a18"/>
   <rect width="1200" height="630" fill="url(#grid)" opacity="0.5"/>
 
   <!-- crosshair markers -->
