@@ -77,21 +77,30 @@ async function build(){
     document.getElementById('status').textContent='No se pudo cargar la data (CORS o red).';
     return;
   }
-  const r32m = data.matches.filter(m=>String(m.round)==='Round of 32');
-  if(r32m.length<16){ document.getElementById('status').textContent='Round of 32 incompleto en la fuente.'; }
+  // indexar partidos por numero oficial (num). Robusto al orden de listado.
+  const byNum = {};
+  data.matches.forEach(m=>{ if(m.num) byNum[m.num]=m; });
 
-  // ordenar como el bracket (orden del dataset = orden oficial de cruces)
-  // construir teams[] (32) y winners[] (16)
+  // ARBOL OFICIAL DEL BRACKET WC2026 (derivado de las referencias W## de R16/QF/SF/Final).
+  // Los octavos NO conectan partidos consecutivos: 89=W74vsW77, 90=W73vsW75, etc.
+  // Recorrido in-order de las hojas, orientado como la imagen de referencia:
+  // mitad derecha del cuadro a la derecha (horario desde arriba), mitad izquierda a la izquierda.
+  // [numero de partido, swap] swap=true muestra team2 primero (al ir rodeando el circulo).
+  const LAYOUT = [
+    [76,false],[78,false],[79,false],[80,false],[86,false],[88,false],[85,false],[87,false],
+    [82,true ],[81,true ],[84,true ],[83,true ],[75,true ],[73,true ],[77,true ],[74,true ]
+  ];
+
   const teams=[], winners=[];
-  for(const m of r32m){
+  for(const [num,swap] of LAYOUT){
+    const m = byNum[num];
+    if(!m){ teams.push({name:'TBD',code:null},{name:'TBD',code:null}); winners.push(null); continue; }
     const w = winnerOf(m);
-    const tA={name:m.team1, code:code(m.team1), won: w===m.team1, lost: w&&w!==m.team1};
-    const tB={name:m.team2, code:code(m.team2), won: w===m.team2, lost: w&&w!==m.team2};
-    teams.push(tA, tB);
-    winners.push(w? (w===m.team1?tA:tB) : null);
+    const t1={name:m.team1, code:code(m.team1), won: w===m.team1, lost: w&&w!==m.team1};
+    const t2={name:m.team2, code:code(m.team2), won: w===m.team2, lost: w&&w!==m.team2};
+    if(swap) teams.push(t2,t1); else teams.push(t1,t2);
+    winners.push(w ? (w===m.team1?t1:t2) : null);
   }
-  while(teams.length<32){ teams.push({name:'TBD',code:null}); }
-  while(winners.length<16){ winners.push(null); }
 
   renderRing(teams);
   await waitFlags();
