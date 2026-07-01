@@ -221,13 +221,69 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     return '<div class="z-view match-view">'+matchCardHTML(byNum[+ctx.props.id])+'</div>';
   }
 
+  // ---- driver custom: la view nueva EMERGE desde el trigger; el bracket queda quieto y se difumina ----
+  function emergeDriver(spec, onComplete){
+    const parseDur = d => { if(typeof d==='number'&&!isNaN(d)) return Math.max(0,d);
+      const m=String(d).match(/^(\d+(?:\.\d+)?)\s*(ms|s)?$/i); if(!m) return 500;
+      const v=parseFloat(m[1]), u=(m[2]||'s').toLowerCase(); return u==='ms'?Math.max(0,v):Math.max(0,v*1000); };
+    const show = el => { if(el){ el.classList.remove('hide'); el.style.contentVisibility='visible'; } };
+    const rm = (el,cv) => { try{ if(cv) cv.removeChild(el);}catch(e){ try{ if(el.parentElement) cv.removeChild(el.parentElement);}catch(e2){} } };
+    const guard = (cleanup, ms) => { let done=false; const t=setTimeout(()=>{ if(!done){done=true;cleanup();} }, ms);
+      return ()=>{ if(done)return; done=true; clearTimeout(t); cleanup(); }; };
+    const { type, currentView, previousView, lastView, currentStage, duration, ease, canvas } = spec;
+    if(!currentView || !previousView || !currentStage){ onComplete(); return; }
+    const durMs = parseDur(duration);
+    const v0 = currentStage.views[0]; // view nueva (match)
+    const v1 = currentStage.views[1]; // view anterior (bracket)
+    if(type==='zoomIn'){
+      show(currentView); show(previousView); show(lastView);
+      // bracket: se queda FULL (backwardState), no zoomea. El blur lo pone el engine via has-effect.
+      previousView.style.transformOrigin = v1.backwardState.origin;
+      previousView.style.transform = v1.backwardState.transform;
+      // match: emerge desde el trigger
+      currentView.style.transformOrigin = v0.backwardState.origin;
+      currentView.style.transform = v0.backwardState.transform;
+      const a = currentView.animate(
+        [{transform:v0.backwardState.transform},{transform:v0.forwardState.transform}],
+        {duration:durMs, easing:ease, fill:'forwards'});
+      const finish = guard(()=>{ try{a.cancel();}catch(e){}
+        currentView.classList.replace('is-new-current-view','is-current-view');
+        currentView.classList.remove('zoom-current-view','has-no-events');
+        currentView.style.transformOrigin = v0.forwardState.origin;
+        currentView.style.transform = v0.forwardState.transform;
+        previousView.classList.remove('zoom-previous-view','has-no-events');
+        previousView.style.transformOrigin = v1.backwardState.origin;
+        previousView.style.transform = v1.backwardState.transform;
+        onComplete();
+      }, durMs+150);
+      a.finished.then(finish).catch(finish);
+    } else if(type==='zoomOut'){
+      show(currentView); show(previousView); show(lastView);
+      const to1 = v1.backwardState;
+      currentView.style.transformOrigin = v0.forwardState.origin;
+      currentView.style.transform = v0.forwardState.transform;
+      const a = currentView.animate(
+        [{transform:v0.forwardState.transform},{transform:v0.backwardState.transform}],
+        {duration:durMs, easing:ease, fill:'forwards'});
+      const finish = guard(()=>{ try{a.cancel();}catch(e){}
+        rm(currentView, canvas);
+        previousView.classList.remove('zoom-previous-view-reverse','has-no-events','has-effect','has-effect-reverse');
+        previousView.style.removeProperty('--z-effect-filter');
+        previousView.style.transformOrigin = '0 0';
+        previousView.style.transform = to1.transform;
+        onComplete();
+      }, durMs+150);
+      a.finished.then(finish).catch(finish);
+    } else { onComplete(); }
+  }
+
   const app = new Zumly({
     mount:'#canvas', initialView:'bracket',
     views:{
       bracket:{ render:()=>buildBracketView(), mounted:()=>{ try{ if(window.Orbit&&Orbit.resize) Orbit.resize('.gravity-spot'); }catch(e){} } },
       match:(ctx)=>buildMatchView(ctx)
     },
-    transitions:{ driver:'waapi', cover:'width', duration:'.7s', ease:'cubic-bezier(.55,.04,.2,1)',
+    transitions:{ driver: emergeDriver, cover:'width', duration:'0.85s', ease:'cubic-bezier(.5,.02,.2,1)',
       effects:['blur(7px) brightness(.58)','blur(12px) saturate(.5) brightness(.5)'], hideTrigger:false },
     depthNav:true, lateralNav:false, inputs:{wheel:true,keyboard:true,click:true,touch:true}
   });
