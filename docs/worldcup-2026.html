@@ -10,10 +10,10 @@
 html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hidden}
 .stage{height:100vh;display:flex;align-items:center;justify-content:center;padding:64px 16px 34px;overflow:hidden;
   background:radial-gradient(ellipse 74% 74% at 50% 52%,#1d1508 0%,#08080d 60%)}
-.scaler{transform-origin:center center;transition:transform .15s ease-out}
-.zumly-canvas{width:780px;height:780px;position:relative}
-.z-view{width:780px;height:780px}
-.wrap{position:relative;width:780px;height:780px}
+.scaler{}
+.zumly-canvas{width:var(--boxpx,780px);height:var(--boxpx,780px);position:relative}
+.z-view{width:var(--boxpx,780px);height:var(--boxpx,780px)}
+.wrap{position:relative;width:780px;height:780px;transform:scale(var(--fit,1));transform-origin:0 0}
 .keys{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 .key{fill:none;stroke:#5a6072;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
 .key.dim{stroke:#363b49;stroke-width:1.4}
@@ -39,9 +39,9 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
 .trophy{position:relative;z-index:3;display:flex;align-items:center;justify-content:center}
 .trophy-img{height:128px;width:auto;filter:drop-shadow(0 0 20px #ffb2227a) drop-shadow(0 4px 10px #0009)}
 /* MATCH VIEW */
-.match-view{position:absolute;inset:0;width:780px;height:780px;display:flex;align-items:center;justify-content:center;
+.match-view{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at 50% 50%,rgba(8,8,13,.10),rgba(8,8,13,.48));cursor:zoom-out}
-.mc-card{position:relative;width:560px;max-width:90%;background:linear-gradient(180deg,#141420,#0e0e16);
+.mc-card{position:relative;width:560px;max-width:none;transform:scale(var(--fit,1));background:linear-gradient(180deg,#141420,#0e0e16);
   border:1px solid #26262f;border-radius:22px;padding:34px 38px 26px;box-shadow:0 30px 80px #000c, inset 0 1px 0 #ffffff0a;color:#eef0f6}
 .mc-close{position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid #33333f;
   background:#1a1a24;color:#9a9fb0;font-size:14px;cursor:pointer;line-height:1}
@@ -292,7 +292,7 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     return '<div class="z-view match-view">'+matchCardHTML(byNum[+ctx.props.id])+'</div>';
   }
 
-  // ---- driver custom: la view nueva EMERGE desde el trigger; el bracket queda quieto y se difumina ----
+  // ---- driver custom: la view nueva EMERGE desde el trigger y la previa ESCALA hacia el (cover), acopladas ----
   function emergeDriver(spec, onComplete){
     const parseDur = d => { if(typeof d==='number'&&!isNaN(d)) return Math.max(0,d);
       const m=String(d).match(/^(\d+(?:\.\d+)?)\s*(ms|s)?$/i); if(!m) return 500;
@@ -306,45 +306,65 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     const durMs = parseDur(duration);
     const v0 = currentStage.views[0]; // view nueva (match)
     const v1 = currentStage.views[1]; // view anterior (bracket)
+    const v2 = currentStage.views[2] || null;
+    const anims=[];
+    const run=(el,from,to)=>{ if(!el) return null;
+      const a=el.animate([{transform:from},{transform:to}],{duration:durMs, easing:ease, fill:'forwards'});
+      anims.push(a); return a; };
     if(type==='zoomIn'){
       show(currentView); show(previousView); show(lastView);
-      // bracket: se queda FULL (backwardState), no zoomea. El blur lo pone el engine via has-effect.
-      previousView.style.transformOrigin = v1.backwardState.origin;
+      // previa: escala hacia el trigger (cover). scale(1) inicial es origin-invariante, no salta.
+      previousView.style.transformOrigin = v1.forwardState.origin;
       previousView.style.transform = v1.backwardState.transform;
-      // match: emerge desde el trigger
+      if(lastView && v2){ lastView.style.transformOrigin = v2.forwardState.origin; lastView.style.transform = v2.backwardState.transform; }
+      // nueva: emerge desde el trigger
       currentView.style.transformOrigin = v0.backwardState.origin;
       currentView.style.transform = v0.backwardState.transform;
-      const a = currentView.animate(
-        [{transform:v0.backwardState.transform},{transform:v0.forwardState.transform}],
-        {duration:durMs, easing:ease, fill:'forwards'});
-      const finish = guard(()=>{ try{a.cancel();}catch(e){}
+      const a = run(currentView, v0.backwardState.transform, v0.forwardState.transform);
+      run(previousView, v1.backwardState.transform, v1.forwardState.transform);
+      if(lastView && v2) run(lastView, v2.backwardState.transform, v2.forwardState.transform);
+      const finish = guard(()=>{ anims.forEach(x=>{try{x.cancel();}catch(e){}});
         currentView.classList.replace('is-new-current-view','is-current-view');
         currentView.classList.remove('zoom-current-view','has-no-events');
         currentView.style.transformOrigin = v0.forwardState.origin;
         currentView.style.transform = v0.forwardState.transform;
         previousView.classList.remove('zoom-previous-view','has-no-events');
-        previousView.style.transformOrigin = v1.backwardState.origin;
-        previousView.style.transform = v1.backwardState.transform;
+        previousView.style.transformOrigin = v1.forwardState.origin;
+        previousView.style.transform = v1.forwardState.transform;
+        if(lastView && v2){ lastView.classList.remove('zoom-last-view','has-no-events'); lastView.style.transformOrigin = v2.forwardState.origin; lastView.style.transform = v2.forwardState.transform; }
         onComplete();
       }, durMs+150);
       a.finished.then(finish).catch(finish);
     } else if(type==='zoomOut'){
       show(currentView); show(previousView); show(lastView);
-      const to1 = v1.backwardState;
+      // card: vuelve al trigger ya (misma tecnica que el driver waapi de zumly)
       currentView.style.transformOrigin = v0.forwardState.origin;
       currentView.style.transform = v0.forwardState.transform;
-      const a = currentView.animate(
-        [{transform:v0.forwardState.transform},{transform:v0.backwardState.transform}],
-        {duration:durMs, easing:ease, fill:'forwards'});
-      const finish = guard(()=>{ try{a.cancel();}catch(e){}
-        rm(currentView, canvas);
-        previousView.classList.remove('zoom-previous-view-reverse','has-no-events','has-effect','has-effect-reverse');
-        previousView.style.removeProperty('--z-effect-filter');
-        previousView.style.transformOrigin = '0 0';
-        previousView.style.transform = to1.transform;
-        onComplete();
-      }, durMs+150);
-      a.finished.then(finish).catch(finish);
+      requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+        // previa: arrancar desde el transform REAL computado, no del string del snapshot
+        previousView.style.transformOrigin = v1.forwardState.origin;
+        if(lastView && v2) lastView.style.transformOrigin = v2.forwardState.origin;
+        const from1 = previousView.style.transform || getComputedStyle(previousView).transform || v1.forwardState.transform;
+        const from2 = (lastView && v2) ? (lastView.style.transform || getComputedStyle(lastView).transform || v2.forwardState.transform) : null;
+        const a = run(currentView, v0.forwardState.transform, v0.backwardState.transform);
+        const p1 = previousView.animate([{transform:from1},{transform:v1.backwardState.transform}],
+          {duration:durMs, easing:ease, fill:'both'}); anims.push(p1);
+        if(lastView && v2){ const p2 = lastView.animate([{transform:from2},{transform:v2.backwardState.transform}],
+          {duration:durMs, easing:ease, fill:'both'}); anims.push(p2); }
+        // WAAPI duenio del transform durante la animacion
+        previousView.style.removeProperty('transform');
+        if(lastView) lastView.style.removeProperty('transform');
+        const finish = guard(()=>{ anims.forEach(x=>{try{x.cancel();}catch(e){}});
+          rm(currentView, canvas);
+          previousView.classList.remove('zoom-previous-view-reverse','has-no-events','has-effect','has-effect-reverse');
+          previousView.style.removeProperty('--z-effect-filter');
+          previousView.style.transformOrigin = '0 0';
+          previousView.style.transform = v1.backwardState.transform;
+          if(lastView && v2){ lastView.classList.remove('zoom-last-view-reverse','has-no-events','has-effect','has-effect-reverse'); lastView.style.removeProperty('--z-effect-filter'); lastView.style.transformOrigin = v2.backwardState.origin; lastView.style.transform = v2.backwardState.transform; }
+          onComplete();
+        }, durMs+150);
+        Promise.all(anims.map(x=>x.finished)).then(finish).catch(finish);
+      }); });
     } else { onComplete(); }
   }
 
@@ -368,9 +388,10 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
   fit();
 
   function fit(){
-    const sc=document.querySelector('.scaler'); if(!sc) return;
     const s=Math.max(0.2, Math.min(1,(window.innerWidth-32)/BOX,(window.innerHeight-130)/BOX));
-    sc.style.transform='scale('+s+')';
+    const rs=document.documentElement.style;
+    rs.setProperty('--fit', s);
+    rs.setProperty('--boxpx', (s*BOX).toFixed(1)+'px');
   }
   window.addEventListener('resize',fit);
 })();
