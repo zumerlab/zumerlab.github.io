@@ -21,7 +21,7 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
 .bigbang{position:absolute;inset:0;z-index:2}
 .satellite{border:none}
 .flag{display:block;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #2c2c38,0 2px 6px #000b;background:#222}
-.flag.s12{width:44px;height:44px}
+.flag.s12{width:20px;height:20px}
 .flag.lost{filter:grayscale(1);opacity:1;box-shadow:0 0 0 2px #2c2c38,0 2px 6px #000b}
 .flag.won{box-shadow:0 0 0 2.5px #ffd34d,0 0 13px #ffd34daa}
 .flag.tbd{border-radius:50%;background:repeating-conic-gradient(#15151d 0 30deg,#1f1f27 0 60deg);box-shadow:0 0 0 2px #2a2a34}
@@ -32,7 +32,7 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
 .onode.won{box-shadow:0 0 0 2.5px #ffd34d,0 0 13px #ffd34daa}
 .onode.tbd{background:repeating-conic-gradient(#15151d 0 30deg,#1f1f27 0 60deg);box-shadow:0 0 0 2px #2a2a34}
 .onode.up{box-shadow:0 0 0 2px #5a6072,0 0 8px #5a607255;cursor:pointer}
-.crest{position:absolute;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 4px #000a);z-index:3}
+.crest{position:absolute;width:22px;height:22px;object-fit:contain;filter:drop-shadow(0 2px 4px #000a);z-index:3}
 .crest.lost{filter:grayscale(1) opacity(.55) drop-shadow(0 2px 4px #000a)}
 .dot{fill:#4a4f60}
 .dot.won{fill:#ffd34d}
@@ -222,10 +222,10 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
       if(playedOrSet(m)) return '<div class="onode tbd up zoom-me" data-to="match" data-id="'+num+'" style="'+st+'" title="'+m.team1+' vs '+m.team2+'"></div>';
       return '<div class="onode tbd" style="'+st+'"></div>';
     }
-    for(let i=0;i<16;i++){ const [x,y]=np.r16[i]; nodes+=nodeHTML(winners[i],30,x,y,matchNums[i]); }
-    for(let j=0;j<8;j++){ const [x,y]=np.r8[j]; nodes+=nodeHTML(nodeTeam(byNum[r16Match[j]]),24,x,y,r16Match[j]); }
-    for(let q=0;q<4;q++){ const [x,y]=np.r4[q]; nodes+=nodeHTML(nodeTeam(byNum[qfMatch[q]]),20,x,y,qfMatch[q]); }
-    for(let f=0;f<2;f++){ const [x,y]=np.r2[f]; nodes+=nodeHTML(nodeTeam(byNum[sfMatch[f]]),18,x,y,sfMatch[f]); }
+    for(let i=0;i<16;i++){ const [x,y]=np.r16[i]; nodes+=nodeHTML(winners[i],26,x,y,matchNums[i]); }
+    for(let j=0;j<8;j++){ const [x,y]=np.r8[j]; nodes+=nodeHTML(nodeTeam(byNum[r16Match[j]]),32,x,y,r16Match[j]); }
+    for(let q=0;q<4;q++){ const [x,y]=np.r4[q]; nodes+=nodeHTML(nodeTeam(byNum[qfMatch[q]]),38,x,y,qfMatch[q]); }
+    for(let f=0;f<2;f++){ const [x,y]=np.r2[f]; nodes+=nodeHTML(nodeTeam(byNum[sfMatch[f]]),44,x,y,sfMatch[f]); }
     return { keysHTML: paths.join('')+dots.join(''), nodesHTML: nodes };
   }
 
@@ -242,7 +242,7 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     let crests='';
     for(let k=0;k<teams.length;k++){
       const t=teams[k]; if(!t.name) continue; const src=CRESTS[t.name]; if(!src) continue;
-      const a=GEO.leaves[k], R=GEO.R32+48, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a), h=21;
+      const a=GEO.leaves[k], R=GEO.R32+36, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a), h=11;
       crests+='<img class="crest'+(t.lost?' lost':'')+'" style="left:'+(x-h).toFixed(1)+'px;top:'+(y-h).toFixed(1)+'px" src="'+src+'" title="'+t.name+'">';
     }
     return '<svg class="keys" viewBox="0 0 '+BOX+' '+BOX+'">'+kn.keysHTML+'</svg>'+
