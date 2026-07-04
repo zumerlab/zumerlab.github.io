@@ -31,7 +31,9 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
 .onode{position:absolute;border-radius:50%;object-fit:cover;z-index:50;box-shadow:0 0 0 2px #2c2c38,0 2px 6px #000b;background:#222}
 .onode.won{box-shadow:0 0 0 2.5px #ffd34d,0 0 13px #ffd34daa}
 .onode.tbd{background:repeating-conic-gradient(#15151d 0 30deg,#1f1f27 0 60deg);box-shadow:0 0 0 2px #2a2a34}
+.onode.up{box-shadow:0 0 0 2px #5a6072,0 0 8px #5a607255;cursor:pointer}
 .crest{position:absolute;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 4px #000a);z-index:3}
+.crest.lost{filter:grayscale(1) opacity(.55) drop-shadow(0 2px 4px #000a)}
 .dot{fill:#4a4f60}
 .dot.won{fill:#ffd34d}
 .trophy{position:relative;z-index:3;display:flex;align-items:center;justify-content:center}
@@ -90,12 +92,16 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
   const code=n=>N2C[n]||null;
   const flagURL=c=>'https://flagcdn.com/w160/'+c+'.png';
   function winnerOf(m){
-    if(!m||!m.score||!m.score.ft) return null;
-    const [a,b]=m.score.ft;
+    if(!m||!m.score) return null;
+    const s=m.score;
+    if(s.p){ const [pa,pb]=s.p; if(pa!==pb) return pa>pb?m.team1:m.team2; }
+    const r=s.et||s.ft; if(!r) return null;
+    const [a,b]=r;
     if(a>b) return m.team1; if(b>a) return m.team2;
-    if(m.score.p){ const [pa,pb]=m.score.p; return pa>pb?m.team1:m.team2; }
     return null;
   }
+  function playedOrSet(m){ return !!(m&&m.team1&&m.team2&&!/^[WL]\d+$/.test(m.team1)&&!/^[WL]\d+$/.test(m.team2)); }
+  function nodeTeam(m){ const w=winnerOf(m); return w?{name:w,code:code(w),won:true,lost:false}:null; }
 
   let data;
   try{ data = await fetch('https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json').then(r=>r.json()); }
@@ -115,48 +121,111 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     winners.push(w?(w===m.team1?t1:t2):null);
   }
 
+  // ---- mapeo dinamico de octavos/cuartos/semis al layout radial ----
+  function findByTeams(nums,a,b){
+    if(!a||!b) return null;
+    for(const n of nums){ const m=byNum[n]; if(!m) continue;
+      if((m.team1===a&&m.team2===b)||(m.team1===b&&m.team2===a)) return n; }
+    return null;
+  }
+  function findByRefs(nums,aNum,bNum){
+    for(const n of nums){ const m=byNum[n]; if(!m) continue;
+      const t=[m.team1,m.team2];
+      if(t.includes('W'+aNum)&&t.includes('W'+bNum)) return n;
+      const wa=winnerOf(byNum[aNum]), wb=winnerOf(byNum[bNum]);
+      if(wa&&wb&&t.includes(wa)&&t.includes(wb)) return n;
+    }
+    return null;
+  }
+  const R16_FB=[91,92,95,96,94,93,90,89];
+  const r16Match=[];
+  for(let j=0;j<8;j++){
+    const wa=winners[2*j]&&winners[2*j].name, wb=winners[2*j+1]&&winners[2*j+1].name;
+    r16Match.push(findByTeams([89,90,91,92,93,94,95,96],wa,wb)
+      || findByRefs([89,90,91,92,93,94,95,96],matchNums[2*j],matchNums[2*j+1])
+      || R16_FB[j]);
+  }
+  const QF_FB=[99,100,98,97], SF_FB=[102,101];
+  const qfMatch=[], sfMatch=[];
+  for(let q=0;q<4;q++) qfMatch.push(findByRefs([97,98,99,100],r16Match[2*q],r16Match[2*q+1])||QF_FB[q]);
+  for(let s=0;s<2;s++) sfMatch.push(findByRefs([101,102],qfMatch[2*s],qfMatch[2*s+1])||SF_FB[s]);
+  const finalMatch=104;
+
+  // subtitulo: ronda en curso
+  (function(){
+    const stages=[['ROUND OF 32',[73,88]],['ROUND OF 16',[89,96]],['QUARTER-FINALS',[97,100]],['SEMI-FINALS',[101,102]],['FINAL',[104,104]]];
+    let cur='FINAL';
+    for(const [label,[a,b]] of stages){
+      let done=true;
+      for(let n=a;n<=b;n++){ if(!winnerOf(byNum[n])){ done=false; break; } }
+      if(!done){ cur=label; break; }
+    }
+    const el=document.querySelector('.sub'); if(el) el.textContent=cur+' \u00b7 LIVE BRACKET';
+  })();
+
   function drawKeysNodes(){
     const paths=[], dots=[], np={r16:[],r8:[],r4:[],r2:[]};
     const R32=GEO.R32, R16=R32*0.795, QF=R32*0.605, SF=R32*0.420, F2=R32*0.235;
     const addDot=(x,y,won,r)=>dots.push('<circle class="dot'+(won?' won':'')+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(r||3)+'"/>');
-    function level(childA, rC, rA, clsL, store, wonL){
+    function level(childA, rC, rA, clsC, store, wonC){
       const out=[];
+      const TAU=2*Math.PI, norm=x=>((x%TAU)+TAU)%TAU;
       for(let k=0;k<childA.length;k+=2){
-        const aa=childA[k], ab=childA[k+1], cls=clsL?clsL[k/2]:'key', won=wonL?wonL[k/2]:false;
+        const aa=childA[k], ab=childA[k+1];
+        const clsA=clsC?clsC[k]:'key', clsB=clsC?clsC[k+1]:'key';
+        const wonA=wonC?!!wonC[k]:false, wonB=wonC?!!wonC[k+1]:false;
         const ca=polar(rC,aa), cb=polar(rC,ab), sa=polar(rA,aa), sb=polar(rA,ab);
-        paths.push('<path class="'+cls+'" d="M '+ca[0].toFixed(1)+' '+ca[1].toFixed(1)+' L '+sa[0].toFixed(1)+' '+sa[1].toFixed(1)+'"/>');
-        paths.push('<path class="'+cls+'" d="M '+cb[0].toFixed(1)+' '+cb[1].toFixed(1)+' L '+sb[0].toFixed(1)+' '+sb[1].toFixed(1)+'"/>');
-        const sweep=((ab-aa)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)<Math.PI?1:0;
-        paths.push('<path class="'+cls+'" d="M '+sa[0].toFixed(1)+' '+sa[1].toFixed(1)+' A '+rA.toFixed(1)+' '+rA.toFixed(1)+' 0 0 '+sweep+' '+sb[0].toFixed(1)+' '+sb[1].toFixed(1)+'"/>');
-        addDot(sa[0],sa[1],won,2.6); addDot(sb[0],sb[1],won,2.6);
-        let mid=(aa+ab)/2; if(Math.abs(aa-ab)>=Math.PI) mid+=Math.PI; out.push(mid);
-        if(store){ np[store].push(polar(rA,mid)); }
+        let mid=(aa+ab)/2; if(Math.abs(aa-ab)>=Math.PI) mid+=Math.PI;
+        const pm=polar(rA,mid);
+        // rayos: cada equipo con su propia clase (solo el ganador va dorado)
+        paths.push('<path class="'+clsA+'" d="M '+ca[0].toFixed(1)+' '+ca[1].toFixed(1)+' L '+sa[0].toFixed(1)+' '+sa[1].toFixed(1)+'"/>');
+        paths.push('<path class="'+clsB+'" d="M '+cb[0].toFixed(1)+' '+cb[1].toFixed(1)+' L '+sb[0].toFixed(1)+' '+sb[1].toFixed(1)+'"/>');
+        // arco partido en el punto medio: cada mitad hereda la clase de su equipo
+        const s1=norm(mid-aa)<Math.PI?1:0, s2=norm(ab-mid)<Math.PI?1:0;
+        paths.push('<path class="'+clsA+'" d="M '+sa[0].toFixed(1)+' '+sa[1].toFixed(1)+' A '+rA.toFixed(1)+' '+rA.toFixed(1)+' 0 0 '+s1+' '+pm[0].toFixed(1)+' '+pm[1].toFixed(1)+'"/>');
+        paths.push('<path class="'+clsB+'" d="M '+pm[0].toFixed(1)+' '+pm[1].toFixed(1)+' A '+rA.toFixed(1)+' '+rA.toFixed(1)+' 0 0 '+s2+' '+sb[0].toFixed(1)+' '+sb[1].toFixed(1)+'"/>');
+        addDot(sa[0],sa[1],wonA,2.6); addDot(sb[0],sb[1],wonB,2.6);
+        out.push(mid);
+        if(store){ np[store].push(pm); }
       }
       return out;
     }
-    const cls32=winners.map(w=>w?'key won':'key'), won32=winners.map(w=>!!w);
-    const m16=level(GEO.leaves,R32,R16,cls32,'r16',won32);
-    const m8=level(m16,R16,QF,Array(8).fill('key dim'),'r8');
-    const m4=level(m8,QF,SF,Array(4).fill('key dim'),'r4');
-    const m2=level(m4,SF,F2,Array(2).fill('key dim'),'r2');
-    m2.forEach(a=>{ const p=polar(F2,a); const hx=cx+(Math.cos(a)<0?-1:1)*F2;
-      paths.push('<path class="key dim" d="M '+p[0].toFixed(1)+' '+p[1].toFixed(1)+' L '+hx.toFixed(1)+' '+cy.toFixed(1)+'"/>');
-      paths.push('<path class="key dim" d="M '+hx.toFixed(1)+' '+cy.toFixed(1)+' L '+cx.toFixed(1)+' '+cy.toFixed(1)+'"/>');
-      addDot(hx,cy,false,2.6);
+    // clase/won por HIJO: dorado solo si ESE equipo gano el partido de su par
+    const chCls=(name,n)=>{ const m=byNum[n], w=winnerOf(m); return (w&&name&&w===name)?'key won':(playedOrSet(m)?'key':'key dim'); };
+    const chWon=(name,n)=>{ const w=winnerOf(byNum[n]); return !!(w&&name&&w===name); };
+    const c32=teams.map(t=>t.won?'key won':'key'), w32=teams.map(t=>!!t.won);
+    const m16=level(GEO.leaves,R32,R16,c32,'r16',w32);
+    const n16=winners.map(w=>w?w.name:null);
+    const m8=level(m16,R16,QF, n16.map((nm,i)=>chCls(nm,r16Match[i>>1])),'r8', n16.map((nm,i)=>chWon(nm,r16Match[i>>1])));
+    const n8=r16Match.map(n=>winnerOf(byNum[n]));
+    const m4=level(m8,QF,SF, n8.map((nm,j)=>chCls(nm,qfMatch[j>>1])),'r4', n8.map((nm,j)=>chWon(nm,qfMatch[j>>1])));
+    const n4=qfMatch.map(n=>winnerOf(byNum[n]));
+    const m2=level(m4,SF,F2, n4.map((nm,q)=>chCls(nm,sfMatch[q>>1])),'r2', n4.map((nm,q)=>chWon(nm,sfMatch[q>>1])));
+    const fw=winnerOf(byNum[finalMatch]);
+    m2.forEach((a,f)=>{ const p=polar(F2,a); const hx=cx+(Math.cos(a)<0?-1:1)*F2;
+      const nm=winnerOf(byNum[sfMatch[f]]);
+      const cls=(fw&&nm&&fw===nm)?'key won':(playedOrSet(byNum[finalMatch])?'key':'key dim');
+      paths.push('<path class="'+cls+'" d="M '+p[0].toFixed(1)+' '+p[1].toFixed(1)+' L '+hx.toFixed(1)+' '+cy.toFixed(1)+'"/>');
+      paths.push('<path class="'+cls+'" d="M '+hx.toFixed(1)+' '+cy.toFixed(1)+' L '+cx.toFixed(1)+' '+cy.toFixed(1)+'"/>');
+      addDot(hx,cy,(fw&&nm&&fw===nm),2.6);
     });
     // nodos
     let nodes='';
     function nodeHTML(t,sz,x,y,num){
       const h=sz/2, st='position:absolute;left:'+(x-h).toFixed(1)+'px;top:'+(y-h).toFixed(1)+'px;width:'+sz+'px;height:'+sz+'px';
-      if(!t||!t.code) return '<div class="onode tbd" style="'+st+'"></div>';
-      const trig = t.won ? ' zoom-me' : '';
-      const da = t.won ? (' data-to="match" data-id="'+num+'"') : '';
-      return '<img class="onode'+(t.won?' won':'')+trig+'" '+da+' style="'+st+'" src="'+flagURL(t.code)+'" title="'+t.name+'">';
+      if(t&&t.code){
+        const trig = t.won ? ' zoom-me' : '';
+        const da = t.won ? (' data-to="match" data-id="'+num+'"') : '';
+        return '<img class="onode'+(t.won?' won':'')+trig+'" '+da+' style="'+st+'" src="'+flagURL(t.code)+'" title="'+t.name+'">';
+      }
+      const m=num?byNum[num]:null;
+      if(playedOrSet(m)) return '<div class="onode tbd up zoom-me" data-to="match" data-id="'+num+'" style="'+st+'" title="'+m.team1+' vs '+m.team2+'"></div>';
+      return '<div class="onode tbd" style="'+st+'"></div>';
     }
     for(let i=0;i<16;i++){ const [x,y]=np.r16[i]; nodes+=nodeHTML(winners[i],30,x,y,matchNums[i]); }
-    for(let j=0;j<8;j++){ const [x,y]=np.r8[j]; nodes+=nodeHTML(null,24,x,y); }
-    for(let q=0;q<4;q++){ const [x,y]=np.r4[q]; nodes+=nodeHTML(null,20,x,y); }
-    for(let f=0;f<2;f++){ const [x,y]=np.r2[f]; nodes+=nodeHTML(null,18,x,y); }
+    for(let j=0;j<8;j++){ const [x,y]=np.r8[j]; nodes+=nodeHTML(nodeTeam(byNum[r16Match[j]]),24,x,y,r16Match[j]); }
+    for(let q=0;q<4;q++){ const [x,y]=np.r4[q]; nodes+=nodeHTML(nodeTeam(byNum[qfMatch[q]]),20,x,y,qfMatch[q]); }
+    for(let f=0;f<2;f++){ const [x,y]=np.r2[f]; nodes+=nodeHTML(nodeTeam(byNum[sfMatch[f]]),18,x,y,sfMatch[f]); }
     return { keysHTML: paths.join('')+dots.join(''), nodesHTML: nodes };
   }
 
@@ -174,7 +243,7 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     for(let k=0;k<teams.length;k++){
       const t=teams[k]; if(!t.name) continue; const src=CRESTS[t.name]; if(!src) continue;
       const a=GEO.leaves[k], R=GEO.R32+48, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a), h=21;
-      crests+='<img class="crest" style="left:'+(x-h).toFixed(1)+'px;top:'+(y-h).toFixed(1)+'px" src="'+src+'" title="'+t.name+'">';
+      crests+='<img class="crest'+(t.lost?' lost':'')+'" style="left:'+(x-h).toFixed(1)+'px;top:'+(y-h).toFixed(1)+'px" src="'+src+'" title="'+t.name+'">';
     }
     return '<svg class="keys" viewBox="0 0 '+BOX+' '+BOX+'">'+kn.keysHTML+'</svg>'+
       '<div class="bigbang"><div class="gravity-spot" style="--o-force:620px;">'+
@@ -194,8 +263,10 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
     const w=winnerOf(m);
     const T=(name)=>({name,code:code(name),won:w===name});
     const t1=T(m.team1), t2=T(m.team2);
-    const ft=(m.score&&m.score.ft)?m.score.ft:[null,null];
-    const pens=(m.score&&m.score.p)?m.score.p:null;
+    const s=m.score||{};
+    const ft=s.et||s.ft||[null,null];
+    const pens=s.p||null;
+    const aet=(s.et&&!pens)?'<div class="mc-pens">tiempo extra</div>':'';
     function row(t){
       const fl=t.code?'<img class="mc-flag" src="'+flagURL(t.code)+'">':'<div class="mc-flag"></div>';
       const cr=CRESTS[t.name]?'<img class="mc-crest" src="'+CRESTS[t.name]+'">':'';
@@ -206,13 +277,13 @@ html,body{margin:0;height:100%;background:#08080d;font-family:Inter;overflow:hid
       return gs.map(g=>'<div class="mc-goal"><span class="mc-min">'+(g.minute?g.minute+"\u2032":'')+'</span> '+(g.name||'')+'</div>').join('');
     }
     const score=(ft[0]!=null)?(ft[0]+'<span class="mc-dash">:</span>'+ft[1]):'vs';
-    const pl=pens?'<div class="mc-pens">penales '+pens[0]+'\u2013'+pens[1]+'</div>':'';
+    const pl=(pens?'<div class="mc-pens">penales '+pens[0]+'\u2013'+pens[1]+'</div>':'')+aet;
     const venue=[m.ground,m.date].filter(Boolean).join('  \u00b7  ');
     return '<div class="mc-card">'+
       '<button class="mc-close" data-close="1">\u2715</button>'+
       '<div class="mc-round">'+(m.round||'')+'</div>'+
       '<div class="mc-main">'+row(t1)+'<div class="mc-score">'+score+pl+'</div>'+row(t2)+'</div>'+
-      '<div class="mc-goals"><div class="mc-col">'+goals(m.goals1)+'</div><div class="mc-divider"></div><div class="mc-col">'+goals(m.goals2)+'</div></div>'+
+      ((ft[0]!=null)?('<div class="mc-goals"><div class="mc-col">'+goals(m.goals1)+'</div><div class="mc-divider"></div><div class="mc-col">'+goals(m.goals2)+'</div></div>'):'')+
       '<div class="mc-venue">'+venue+'</div>'+
       '<div class="mc-hint">\u2190 volver  \u00b7  scroll  \u00b7  \u2715</div>'+
       '</div>';
