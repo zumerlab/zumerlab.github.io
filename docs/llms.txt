@@ -8,7 +8,7 @@ Zumerlab maintains six production projects, grouped into libraries and tooling. 
 
 - [Orbit](https://zumerlab.com/orbit-docs/): A CSS framework for building radial UIs — gauges, donuts, knobs, pie menus, dashboards — with CSS only. No layout JavaScript. Works with plain HTML and any framework. Drop in two files. Structure: `bigbang` (container) → `gravity-spot` (center) → `orbit-N` (ring level) → `o-progress` or `o-arc` elements. Installable via `npm install @zumer/orbit` or CDN.
 - [Zumly](https://zumerlab.com/zumly/): A JavaScript library for hierarchical zoom navigation — moving in Z (depth) through discrete views laid out in the XY plane, with spatial transitions instead of flat screen swaps. Pluggable transition drivers (CSS, WAAPI, Anime.js, GSAP, Motion, custom). Plugin API, hash router, prefetch cache. UI-agnostic. Installable via `npm install zumly`.
-- [snapDOM](https://zumerlab.com/snapdom/): A fast and accurate DOM-to-image capture engine. Captures any HTML element as a scalable image, preserving styles, fonts, background images, pseudo-elements, and shadow DOM. Exports to SVG, PNG, JPG, WebP, canvas, or Blob. Supports same-origin iframes, CSS counters, line-clamp. Zero dependencies. Installable via `npm install @zumer/snapdom`.
+- [snapDOM](https://snapdom.dev/): A fast and accurate DOM-to-image capture engine. Captures any HTML element as a scalable image, preserving styles, fonts, background images, pseudo-elements, and shadow DOM. Exports to SVG, PNG, JPG, WebP, canvas, or Blob. Supports same-origin iframes, CSS counters, line-clamp. Zero dependencies. Installable via `npm install @zumer/snapdom`.
 
 ## Tooling & agents
 
