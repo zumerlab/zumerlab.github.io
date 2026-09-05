@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Zumerlab — Open-source web tools: Orbit, Zumly, snapDOM, snapeye, snapdiff, zumerBox</title>
-<meta name="description" content="Zumerlab is an independent software lab building small, sharp, open-source web primitives: Orbit (radial CSS UIs), Zumly (zoom navigation), snapDOM (DOM capture), snapeye (agent eyes), snapdiff (visual testing), and zumerBox (dev tooling)." />
+<title>Zumerlab — Open-source web tools: Orbit, Zumly, snapDOM, snapeye, snapdiff</title>
+<meta name="description" content="An independent software lab building open-source tools for the web: Orbit, Zumly, snapDOM, snapeye, and snapdiff." />
 <meta name="author" content="Zumerlab" />
-<meta name="keywords" content="Zumerlab, Orbit CSS, Zumly, snapDOM, snapeye, snapdiff, zumerBox, radial UI, zoom navigation, DOM to image, visual regression testing, AI agent tooling, open source, web components" />
+<meta name="keywords" content="Zumerlab, Orbit CSS, Zumly, snapDOM, snapeye, snapdiff, radial UI, zoom navigation, DOM to image, visual regression testing, AI agent tooling, open source, web components" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#ffffff" />
 <link rel="canonical" href="https://zumerlab.com/" />
@@ -16,7 +16,7 @@
 <!-- Open Graph -->
 <meta property="og:site_name" content="Zumerlab" />
 <meta property="og:title" content="Zumerlab — Open-source web tools" />
-<meta property="og:description" content="An independent software lab building small, sharp, open-source web primitives." />
+<meta property="og:description" content="An independent software lab building open-source tools for the web." />
 <meta property="og:url" content="https://zumerlab.com/" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="en_US" />
@@ -28,7 +28,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Zumerlab — Open-source web tools" />
-<meta name="twitter:description" content="An independent software lab building small, sharp, open-source web primitives." />
+<meta name="twitter:description" content="An independent software lab building open-source tools for the web." />
 <meta name="twitter:image" content="https://zumerlab.com/og.svg" />
 <meta name="twitter:image:alt" content="Zumerlab — a small lab building unusual web tools" />
 
@@ -111,7 +111,7 @@
       "operatingSystem": "Web",
       "url": "https://github.com/zumerlab/snapeye",
       "downloadUrl": "https://www.npmjs.com/package/@zumer/snapeye",
-      "description": "A tiny bridge that gives an AI coding agent eyes on your running web app: snapDOM in the browser, a two-endpoint HTTP handler on the server, PNG on disk.",
+      "description": "Capture, compare, and record a running web app for coding agents. Built on snapDOM and snapdiff.",
       "license": "https://opensource.org/licenses/MIT",
       "author": { "@type": "Organization", "name": "Zumerlab" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -128,19 +128,6 @@
       "license": "https://opensource.org/licenses/MIT",
       "author": { "@type": "Organization", "name": "Zumerlab" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-    },
-    {
-      "@type": "SoftwareApplication",
-      "name": "zumerBox",
-      "alternateName": "zumerbox",
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Web",
-      "url": "https://github.com/zumerlab/zumerbox",
-      "downloadUrl": "https://www.npmjs.com/package/zumerbox",
-      "description": "A ready-to-use set of small development tools — versioning, changelog, linting, formatting, building, and testing — bundled as runnable binaries.",
-      "license": "https://opensource.org/licenses/MIT",
-      "author": { "@type": "Organization", "name": "Zumerlab" },
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
     }
   ]
 }
@@ -148,152 +135,200 @@
 
 <style>
   :root {
-    --bg:      #ffffff;
-    --ink:     #0b1016;   /* body text — near black on white */
-    --ink-soft:#3a4654;   /* blockquote prose */
-    --syntax:  #aeb9c4;   /* markdown punctuation: [ ] ( ) * ` --- and urls */
-    --accent:  #2962ff;   /* electric blue — the single accent */
-    --c-head:  var(--accent);   /* heading hashes */
-    --c-link:  var(--accent);   /* link text + underline */
-    --c-bullet:var(--accent);   /* list dashes */
-    --c-quote: var(--accent);   /* blockquote marker */
-    --c-bold:  #0b1016;   /* **strong** content */
-    --c-code:  var(--accent);   /* `inline code` */
-    --c-rule:  #e2e8ee;
+    --bg: #ffffff;
+    --ink: #0b1016;
+    --ink-soft: #3a4654;
+    --muted: #626e7b;
+    --syntax: #7a8490;
+    --accent: #2962ff;
+    --rule: #e2e8ee;
+    --gutter: 2rem;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+  *, *::before, *::after { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-
   body {
+    margin: 0;
     background: var(--bg);
     color: var(--ink);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    min-height: 100vh;
   }
 
-  ::selection { background: var(--c-link); color: #fff; }
-  :focus-visible { outline: 2px solid var(--c-link); outline-offset: 2px; border-radius: 2px; }
+  ::selection { background: var(--accent); color: var(--bg); }
+  a { color: var(--accent); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 1px; }
+  h1, h2, h3, p { margin: 0; }
 
-  /* faint "editor tab" line at the very top */
-  .tab {
-    font-size: 12.5px; color: var(--syntax);
-    padding: 40px 0 0 60px;
-    display: flex; gap: 10px; align-items: center;
-    user-select: none;
+  .page {
+    max-width: 760px;
+    margin-left: clamp(24px, 5vw, 72px);
+    padding: 36px 28px 72px 0;
   }
-  .tab .path b { color: var(--ink); font-weight: 600; }
+  .file-path {
+    margin-bottom: 42px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .file-path b { color: var(--ink-soft); font-weight: 500; }
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 24px;
+    padding: 8px 12px;
+    background: var(--bg);
+    transform: translateY(-200%);
+  }
+  .skip-link:focus { transform: translateY(0); }
 
-  main { max-width: 760px; margin: 0; padding: 22px 28px 16vh 60px; }
+  /* Keep the Markdown document, with real headings and naturally wrapping prose. */
+  .marked { position: relative; padding-left: var(--gutter); }
+  .marker {
+    position: absolute;
+    left: 0;
+    width: var(--gutter);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 400;
+  }
+  h1 {
+    font-size: clamp(36px, 4vw, 48px);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+  h1 .marker { bottom: 0.35em; }
+  .intro { margin-top: 24px; max-width: 620px; color: var(--ink-soft); }
+  .intro .marker { top: 0.12em; }
+  section { margin-top: 48px; }
+  h2 { font-size: 23px; font-weight: 650; line-height: 1.4; letter-spacing: -0.02em; }
+  h2 .marker { top: 0.35em; font-size: 14px; }
+  .project-list, .contact-list { list-style: none; padding: 0; margin: 20px 0 0; }
+  .project-list { display: grid; gap: 22px; }
+  .project .marker { top: 9px; }
+  h3 { font-size: 18px; line-height: 1.6; font-weight: 600; }
+  .project-link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 4px;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 40px;
+    padding: 5px 0;
+    text-decoration: none;
+  }
+  .project-name { white-space: nowrap; }
+  .project-name .label { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .syntax { color: var(--syntax); font-weight: 400; }
+  .url {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    overflow-wrap: anywhere;
+  }
+  .project-link:hover .label { text-decoration-thickness: 2px; }
+  .project-link:hover .url { color: var(--ink-soft); }
+  .project p { max-width: 62ch; color: var(--ink-soft); }
+  .section-note { margin: 14px 0 0 var(--gutter); color: var(--muted); font-size: 14px; }
 
-  /* the document is literal markdown source — wrapped, never rendered */
-  .doc {
-    font-family: inherit;            /* standard font, NOT monospace */
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: clamp(16px, 1.05rem + 0.2vw, 19px);
-    line-height: 1.9;
-    tab-size: 2;
+  .contact-list { display: grid; gap: 2px; }
+  .contact-list li { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 10px; }
+  .contact-list .marker { top: 8px; }
+  .contact-list a { display: inline-block; padding: 8px 0; text-decoration: none; }
+  .contact-list .label { text-decoration: underline; }
+  .contact-list a:hover .label { text-decoration-thickness: 2px; }
+  .contact-note { color: var(--muted); font-size: 14px; }
+  footer {
+    margin: 44px 0 0 var(--gutter);
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
   }
 
-  /* ── token colors (syntax highlighting over raw markdown) ── */
-  .s   { color: var(--syntax); }                                  /* punctuation */
-  .hm  { color: var(--c-head); font-weight: 700; }                /* # ## */
-  .h1t { font-size: 2.5em; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
-  .h2t { font-size: 1.4em; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
-  .bul { color: var(--c-bullet); font-weight: 700; }              /* - */
-  .qm  { color: var(--c-quote); font-weight: 700; }               /* > */
-  .qt  { color: var(--ink-soft); }                                /* prose stays readable */
-  .bd  { color: var(--c-bold); font-weight: 700; }                /* **strong** */
-  .u   { color: var(--syntax); font-size: 0.82em; }               /* raw url */
-  .cm  { color: var(--syntax); font-style: italic; }              /* <!-- comment --> */
-  .rule{ color: var(--c-rule); }
-
-  a.lnk { color: var(--c-link); text-decoration: none; border-radius: 2px; transition: background .15s; }
-  a.lnk .lt { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; font-weight: 600; }
-  a.lnk:hover { background: color-mix(in srgb, var(--c-link) 12%, transparent); }
-  a.lnk:hover .u { color: var(--c-link); }
-
-  /* blinking block cursor at the end — the "live file" tell */
-  .cursor {
-    display: inline-block; width: 0.6em; height: 1.05em;
-    background: var(--ink); vertical-align: -0.18em; margin-left: 2px;
-    animation: blink 1.1s steps(1) infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
-
-  @media (max-width: 560px) {
-    .tab { padding: 26px 0 0 22px; }
-    main { padding: 16px 18px 14vh 22px; }
-    .h1t { font-size: 2em; }
-    .tab .path { display: none; }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .page { padding: 24px 24px 48px 0; }
+    .file-path { margin-bottom: 32px; font-size: 11px; }
+    .intro { margin-top: 20px; }
+    section { margin-top: 38px; }
+    .project-list { gap: 24px; }
+    .project-link { display: block; padding: 4px 0 8px; }
+    .url { display: block; margin-top: 2px; line-height: 1.7; }
+    .contact-list li { column-gap: 8px; }
+    .contact-note { font-size: 13px; }
+    :root { --gutter: 1.5rem; }
   }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#libraries">Skip to projects</a>
+<div class="page">
+  <header class="file-path"><b>zumerlab.com</b> / index.md</header>
 
-  <div class="tab">
-    <span class="path"><b>zumerlab.com</b> / index.md</span>
-  </div>
+  <main id="main">
+    <h1 class="marked"><span class="marker" aria-hidden="true">#</span>Zumerlab</h1>
+    <p class="intro marked"><span class="marker" aria-hidden="true">&gt;</span>An independent software lab building open-source tools for the web. MIT-licensed, with source and documentation on GitHub.</p>
 
-<main>
-<pre class="doc" role="document" aria-label="Zumerlab — index">
-<span class="hm">#</span> <span class="h1t">Zumerlab</span>
+    <section id="libraries" aria-labelledby="libraries-title" tabindex="-1">
+      <h2 id="libraries-title" class="marked"><span class="marker" aria-hidden="true">##</span>Libraries</h2>
+      <ul class="project-list" role="list">
+        <li class="project marked">
+          <span class="marker" aria-hidden="true">-</span>
+          <h3><a class="project-link" href="https://zumerlab.com/orbit-docs/"><span class="project-name"><span class="syntax" aria-hidden="true">[</span><span class="label">Orbit</span><span class="syntax" aria-hidden="true">]</span></span><span class="url" aria-hidden="true">(https://zumerlab.com/orbit-docs/)</span></a></h3>
+          <p>Radial interfaces in CSS: gauges, knobs, pie menus, and dashboards. No layout JavaScript.</p>
+        </li>
+        <li class="project marked">
+          <span class="marker" aria-hidden="true">-</span>
+          <h3><a class="project-link" href="https://zumerlab.com/zumly/"><span class="project-name"><span class="syntax" aria-hidden="true">[</span><span class="label">Zumly</span><span class="syntax" aria-hidden="true">]</span></span><span class="url" aria-hidden="true">(https://zumerlab.com/zumly/)</span></a></h3>
+          <p>Zoom through nested views instead of switching screens. Pluggable transitions, a hash router, and prefetching.</p>
+        </li>
+        <li class="project marked">
+          <span class="marker" aria-hidden="true">-</span>
+          <h3><a class="project-link" href="https://snapdom.dev/"><span class="project-name"><span class="syntax" aria-hidden="true">[</span><span class="label">snapDOM</span><span class="syntax" aria-hidden="true">]</span></span><span class="url" aria-hidden="true">(https://snapdom.dev/)</span></a></h3>
+          <p>Capture DOM elements as SVG, PNG, JPG, WebP, canvas, or Blob. Preserves styles and fonts. Zero dependencies.</p>
+        </li>
+      </ul>
+    </section>
 
-<span class="qm">&gt;</span> <span class="qt">An independent software lab building small, sharp, open-source</span>
-<span class="qm">&gt;</span> <span class="qt">web primitives. Framework-agnostic, </span><span class="s">**</span><span class="bd">zero dependencies</span><span class="s">**</span><span class="qt">,</span>
-<span class="qm">&gt;</span> <span class="qt">MIT-licensed, developed in the open — readable by humans </span><span class="s">**</span><span class="bd">and</span><span class="s">**</span><span class="qt"> agents.</span>
+    <section aria-labelledby="tooling-title">
+      <h2 id="tooling-title" class="marked"><span class="marker" aria-hidden="true">##</span>Tooling &amp; agents</h2>
+      <ul class="project-list" role="list">
+        <li class="project marked">
+          <span class="marker" aria-hidden="true">-</span>
+          <h3><a class="project-link" href="https://github.com/zumerlab/snapeye"><span class="project-name"><span class="syntax" aria-hidden="true">[</span><span class="label">snapeye</span><span class="syntax" aria-hidden="true">]</span></span><span class="url" aria-hidden="true">(https://github.com/zumerlab/<wbr>snapeye)</span></a></h3>
+          <p>Capture, compare, and record a running web app for coding agents. Images, visual diffs, and recordings saved to disk.</p>
+        </li>
+        <li class="project marked">
+          <span class="marker" aria-hidden="true">-</span>
+          <h3><a class="project-link" href="https://github.com/zumerlab/snapdiff"><span class="project-name"><span class="syntax" aria-hidden="true">[</span><span class="label">snapdiff</span><span class="syntax" aria-hidden="true">]</span></span><span class="url" aria-hidden="true">(https://github.com/zumerlab/<wbr>snapdiff)</span></a></h3>
+          <p>Visual regression testing in the browser. Capture components, compare them with baselines, and review what changed.</p>
+        </li>
+      </ul>
+      <p class="section-note">snapeye and snapdiff are built on <a href="https://snapdom.dev/">snapDOM</a>.</p>
+    </section>
 
+    <section aria-labelledby="find-title">
+      <h2 id="find-title" class="marked"><span class="marker" aria-hidden="true">##</span>Find us</h2>
+      <ul class="contact-list" role="list">
+        <li class="marked"><span class="marker" aria-hidden="true">-</span><a href="https://github.com/zumerlab"><span class="syntax" aria-hidden="true">[</span><span class="label">GitHub</span><span class="syntax" aria-hidden="true">]</span></a><span class="contact-note">— source code</span></li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span><a href="https://www.npmjs.com/~zumer"><span class="syntax" aria-hidden="true">[</span><span class="label">npm</span><span class="syntax" aria-hidden="true">]</span></a><span class="contact-note">— packages</span></li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span><a href="https://github.com/sponsors/tinchox5"><span class="syntax" aria-hidden="true">[</span><span class="label">Sponsor</span><span class="syntax" aria-hidden="true">]</span></a><span class="contact-note">— support the lab</span></li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span><a href="/llms.txt"><span class="syntax" aria-hidden="true">[</span><span class="label">llms.txt</span><span class="syntax" aria-hidden="true">]</span></a><span class="contact-note">— a plain-text guide</span></li>
+      </ul>
+    </section>
+  </main>
 
-<span class="hm">##</span> <span class="h2t">Libraries</span>
-
-<span class="bul">-</span> <a class="lnk" href="https://zumerlab.com/orbit-docs/" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">Orbit</span><span class="s">](</span><span class="u">https://zumerlab.com/orbit-docs/</span><span class="s">)</span></a>
-  CSS framework for radial UIs — gauges, donuts, knobs, pie menus,
-  dashboards. <span class="s">**</span><span class="bd">CSS only, no layout JavaScript.</span><span class="s">**</span>
-
-<span class="bul">-</span> <a class="lnk" href="https://zumerlab.com/zumly/" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">Zumly</span><span class="s">](</span><span class="u">https://zumerlab.com/zumly/</span><span class="s">)</span></a>
-  Hierarchical zoom navigation — move in <span class="s">**</span><span class="bd">Z</span><span class="s">**</span> through views laid
-  out on the XY plane. Pluggable drivers, hash router, prefetch cache.
-
-<span class="bul">-</span> <a class="lnk" href="https://snapdom.dev/" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">snapDOM</span><span class="s">](</span><span class="u">https://snapdom.dev/</span><span class="s">)</span></a>
-  Fast, accurate DOM-to-image capture. Any element to SVG, PNG, JPG,
-  WebP, canvas or Blob. <span class="s">**</span><span class="bd">Zero dependencies.</span><span class="s">**</span>
-
-
-<span class="hm">##</span> <span class="h2t">Tooling &amp; agents</span>
-
-<span class="qm">&gt;</span> <span class="qt">built on </span><a class="lnk" href="https://snapdom.dev/" target="_blank" rel="noopener"><span class="lt">snapDOM</span></a>
-
-<span class="bul">-</span> <a class="lnk" href="https://github.com/zumerlab/snapeye" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">snapeye</span><span class="s">](</span><span class="u">https://github.com/zumerlab/snapeye</span><span class="s">)</span></a>
-  Eyes for AI coding agents — snapDOM in the browser, a two-endpoint
-  server handler, a PNG on disk. The agent sees the result and iterates.
-
-<span class="bul">-</span> <a class="lnk" href="https://github.com/zumerlab/snapdiff" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">snapdiff</span><span class="s">](</span><span class="u">https://github.com/zumerlab/snapdiff</span><span class="s">)</span></a>
-  Client-side visual regression testing — capture in the browser, diff
-  against baselines, catch changes without a headless cluster.
-
-<span class="bul">-</span> <a class="lnk" href="https://github.com/zumerlab/zumerbox" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">zumerBox</span><span class="s">](</span><span class="u">https://github.com/zumerlab/zumerbox</span><span class="s">)</span></a>
-  A dev toolkit shipped as runnable binaries — versioning, changelog,
-  lint, format, build, doc extraction, test.
-
-
-<span class="hm">##</span> <span class="h2t">Find us</span>
-
-<span class="bul">-</span> <a class="lnk" href="https://github.com/zumerlab" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">github.com/zumerlab</span><span class="s">](</span><span class="u">https://github.com/zumerlab</span><span class="s">)</span></a> — code
-<span class="bul">-</span> <a class="lnk" href="https://github.com/sponsors/tinchox5" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">sponsors/tinchox5</span><span class="s">](</span><span class="u">https://github.com/sponsors/tinchox5</span><span class="s">)</span></a> — support the lab
-<span class="bul">-</span> <a class="lnk" href="https://www.npmjs.com/~zumer" target="_blank" rel="noopener"><span class="s">[</span><span class="lt">npmjs.com/~zumer</span><span class="s">](</span><span class="u">https://www.npmjs.com/~zumer</span><span class="s">)</span></a> — packages
-<span class="bul">-</span> <a class="lnk" href="/llms.txt"><span class="s">[</span><span class="lt">llms.txt</span><span class="s">](</span><span class="u">/llms.txt</span><span class="s">)</span></a> — this page, for machines
-
-
-<span class="rule">——————————————————————</span>
-
-<span class="cm">&lt;!-- MIT · made with care · this page is the source. end / transmission --&gt;</span><span class="cursor" aria-hidden="true"></span>
-</pre>
-</main>
-
+  <footer><p><span aria-hidden="true">&lt;!-- </span>MIT-licensed. Built in the open.<span aria-hidden="true"> --&gt;</span></p></footer>
+</div>
 </body>
 </html>

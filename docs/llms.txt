@@ -1,8 +1,8 @@
 # Zumerlab
 
-> Zumerlab is an independent software lab building small, sharp, open-source web primitives. We make framework-agnostic libraries and tooling with zero or near-zero runtime dependencies, all MIT-licensed and developed in the open on GitHub.
+> Zumerlab is an independent software lab building open-source tools for the web. The projects are MIT-licensed, with source and documentation on GitHub.
 
-Zumerlab maintains six production projects, grouped into libraries and tooling. The libraries are **Orbit** (CSS framework for radial UIs), **Zumly** (hierarchical zoom navigation), and **snapDOM** (DOM-to-image capture). The tooling — built on snapDOM — is **snapeye** (eyes for AI coding agents), **snapdiff** (client-side visual regression testing), plus **zumerBox** (a development toolkit). Each project ships with source, and the libraries also ship live demos and documentation. They are designed to work with plain HTML and any framework (React, Vue, Svelte), and to be readable by both humans and agents.
+Zumerlab maintains five projects, grouped into libraries and tooling. The libraries are **Orbit** (CSS framework for radial UIs), **Zumly** (hierarchical zoom navigation), and **snapDOM** (DOM-to-image capture). The tooling is **snapeye** (capture, compare, and record for coding agents) and **snapdiff** (client-side visual regression testing). snapeye and snapdiff are built on snapDOM. Each project ships with source, and the libraries also ship live demos and documentation. They are designed to work with plain HTML and any framework (React, Vue, Svelte), and to be readable by both humans and agents.
 
 ## Libraries
 
@@ -12,18 +12,16 @@ Zumerlab maintains six production projects, grouped into libraries and tooling. 
 
 ## Tooling & agents
 
-- [snapeye](https://github.com/zumerlab/snapeye): A tiny bridge that gives an AI coding agent eyes on your running web app — snapDOM in the browser, a two-endpoint HTTP handler on the server, a PNG on disk. The agent triggers a capture, sees the result, and iterates. Built on snapDOM. Installable via `npm install @zumer/snapeye`.
+- [snapeye](https://github.com/zumerlab/snapeye): Capture, compare, and record a running web app for coding agents. Saves images, visual diffs, and recordings to disk. Built on snapDOM and snapdiff. Installable via `npm install @zumer/snapeye`.
 - [snapdiff](https://github.com/zumerlab/snapdiff): Client-side visual regression testing powered by snapDOM. Capture components in the browser, compare against baselines, and catch unintended visual changes without a headless cluster. Built on snapDOM. Installable via `npm install @zumer/snapdiff`.
-- [zumerBox](https://github.com/zumerlab/zumerbox): A ready-to-use set of small development tools bundled as runnable binaries — versioning, changelog, linting, formatting, building, doc extraction, and testing. The workbench the lab uses to ship its other projects. Installable via `npm install zumerbox`.
 
 ## Source code
 
 - [Orbit on GitHub](https://github.com/zumerlab/orbit): Source repository for Orbit CSS framework.
 - [Zumly on GitHub](https://github.com/zumerlab/zumly): Source repository for Zumly zoom navigation library.
 - [snapDOM on GitHub](https://github.com/zumerlab/snapdom): Source repository for snapDOM capture engine.
-- [snapeye on GitHub](https://github.com/zumerlab/snapeye): Source repository for snapeye agent bridge.
+- [snapeye on GitHub](https://github.com/zumerlab/snapeye): Source repository for snapeye capture, comparison, and recording tools.
 - [snapdiff on GitHub](https://github.com/zumerlab/snapdiff): Source repository for snapdiff visual regression testing.
-- [zumerBox on GitHub](https://github.com/zumerlab/zumerbox): Source repository for the zumerBox development toolkit.
 - [Zumerlab on GitHub](https://github.com/zumerlab): Organization page with all repositories.
 
 ## Packages
@@ -33,18 +31,16 @@ Zumerlab maintains six production projects, grouped into libraries and tooling. 
 - [@zumer/snapdom on npm](https://www.npmjs.com/package/@zumer/snapdom): npm package for snapDOM.
 - [@zumer/snapeye on npm](https://www.npmjs.com/package/@zumer/snapeye): npm package for snapeye.
 - [@zumer/snapdiff on npm](https://www.npmjs.com/package/@zumer/snapdiff): npm package for snapdiff.
-- [zumerbox on npm](https://www.npmjs.com/package/zumerbox): npm package for zumerBox.
 
 ## Documentation
 
 - [Orbit docs](https://zumerlab.com/orbit-docs/): Live showcase and full documentation for Orbit, including component API, examples, and theming.
 - [Zumly README](https://github.com/zumerlab/zumly#readme): Full reference for Zumly: installation, view sources, transition drivers, plugin API, hash router, geometry optimization.
 - [snapDOM README](https://github.com/zumerlab/snapdom#readme): Full reference for snapDOM: installation, basic usage, API, options, supported features.
-- [snapeye README](https://github.com/zumerlab/snapeye#readme): Full reference for snapeye: setup, endpoints, and agent integration.
+- [snapeye README](https://github.com/zumerlab/snapeye#readme): Full reference for snapeye: setup, capture, comparison, recording, and agent integration.
 - [snapdiff README](https://github.com/zumerlab/snapdiff#readme): Full reference for snapdiff: capturing baselines, diffing, and CI usage.
-- [zumerBox README](https://github.com/zumerlab/zumerbox#readme): Full reference for the zumerBox toolkit and its individual tools.
 
 ## Optional
 
 - [Sponsor on GitHub](https://github.com/sponsors/tinchox5): Sponsorship page that helps keep the lab open.
-- [Adjacent repositories](https://github.com/zumerlab): Smaller experiments and the individual `zumerbox-*` tools (bump, changelog, build, tests, lint presets, and more).
+- [Adjacent repositories](https://github.com/zumerlab): Smaller experiments from the lab.
