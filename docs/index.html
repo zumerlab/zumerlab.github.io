@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Zumerlab — Open-source web tools: Orbit, Zumly, SnapDOM, Snapeye, Snapdiff</title>
-<meta name="description" content="An independent software lab building open-source tools for the web: Orbit, Zumly, SnapDOM, Snapeye, and Snapdiff." />
+<title>Zumerlab — Open-source web tools: Orbit, Zumly, SnapDOM, Snapeye, Snapdiff, SnapSurf</title>
+<meta name="description" content="An independent software lab building open-source tools for the web: Orbit, Zumly, SnapDOM, Snapeye, Snapdiff, and SnapSurf." />
 <meta name="author" content="Zumerlab" />
 <meta name="keywords" content="Zumerlab, Orbit CSS, Zumly, SnapDOM, Snapeye, Snapdiff, SnapSurf, radial UI, zoom navigation, DOM to image, visual regression testing, AI agent tooling, open source, web components" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b1016" media="(prefers-color-scheme: dark)" />
+<meta name="color-scheme" content="light dark" />
 <link rel="canonical" href="https://zumerlab.com/" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
 <!-- Open Graph -->
 <meta property="og:site_name" content="Zumerlab" />
@@ -20,7 +22,7 @@
 <meta property="og:url" content="https://zumerlab.com/" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:image" content="https://zumerlab.com/og.svg" />
+<meta property="og:image" content="https://zumerlab.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="Zumerlab — a small lab building unusual web tools" />
@@ -29,7 +31,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Zumerlab — Open-source web tools" />
 <meta name="twitter:description" content="An independent software lab building open-source tools for the web." />
-<meta name="twitter:image" content="https://zumerlab.com/og.svg" />
+<meta name="twitter:image" content="https://zumerlab.com/og.png" />
 <meta name="twitter:image:alt" content="Zumerlab — a small lab building unusual web tools" />
 
 <!-- JSON-LD: Organization -->
@@ -40,7 +42,7 @@
   "name": "Zumerlab",
   "alternateName": "Zumer Lab",
   "url": "https://zumerlab.com/",
-  "logo": "https://zumerlab.com/favicon.svg",
+  "logo": "https://zumerlab.com/logo.svg",
   "description": "An independent software lab building open-source web primitives.",
   "sameAs": [
     "https://github.com/zumerlab",
@@ -128,6 +130,19 @@
       "license": "https://opensource.org/licenses/MIT",
       "author": { "@type": "Organization", "name": "Zumerlab" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "SnapSurf",
+      "alternateName": "@zumer/snapsurf",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "url": "https://github.com/zumerlab/snapsurf",
+      "downloadUrl": "https://www.npmjs.com/package/@zumer/snapsurf",
+      "description": "Web navigation and verification for AI agents, with semantic diffs and assertions after each action. Built on SnapDOM.",
+      "license": "https://opensource.org/licenses/MIT",
+      "author": { "@type": "Organization", "name": "Zumerlab" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
     }
   ]
 }
@@ -140,10 +155,23 @@
     --ink-soft: #3a4654;
     --muted: #626e7b;
     --syntax: #7a8490;
-    --accent: #2962ff;
+    --accent: #0077b8;
+    --brand: #0abdf6;
     --rule: #e2e8ee;
     --gutter: 2rem;
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1016;
+      --ink: #eef2f6;
+      --ink-soft: #c2cbd5;
+      --muted: #8d99a6;
+      --syntax: #6f7b88;
+      --accent: #4cc9f8;
+      --rule: #1f2a35;
+    }
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -170,11 +198,20 @@
     padding: 36px 28px 72px 0;
   }
   .file-path {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 42px;
     font-family: var(--mono);
     font-size: 12px;
     color: var(--muted);
   }
+  .brand { display: inline-flex; padding: 2px; border-radius: 50%; }
+  .logo { display: block; width: 32px; height: 32px; color: var(--brand); }
+  .logo .ring { transform-origin: 52px 52px; transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1); }
+  .brand:hover .ring-outer, .brand:focus-visible .ring-outer { transform: rotate(90deg); }
+  .brand:hover .ring-inner, .brand:focus-visible .ring-inner { transform: rotate(-180deg); }
+  @media (prefers-reduced-motion: reduce) { .logo .ring { transition: none; } }
   .file-path b { color: var(--ink-soft); font-weight: 500; }
   .skip-link {
     position: absolute;
@@ -258,7 +295,8 @@
   @media (max-width: 600px) {
     body { font-size: 16px; }
     .page { padding: 24px 24px 48px 0; }
-    .file-path { margin-bottom: 32px; font-size: 11px; }
+    .file-path { margin-bottom: 32px; font-size: 11px; gap: 10px; }
+    .logo { width: 28px; height: 28px; }
     .intro { margin-top: 20px; }
     section { margin-top: 38px; }
     .project-list { gap: 24px; }
@@ -273,7 +311,16 @@
 <body>
 <a class="skip-link" href="#libraries">Skip to projects</a>
 <div class="page">
-  <header class="file-path"><b>zumerlab.com</b> / index.md</header>
+  <header class="file-path">
+    <a class="brand" href="/" aria-label="Zumerlab home">
+      <svg class="logo" viewBox="0 0 104 104" fill="none" stroke="currentColor" stroke-width="7" aria-hidden="true">
+        <path class="ring ring-outer" d="M52 3.5A48.5 48.5 0 1 1 3.5 52"/>
+        <path class="ring ring-inner" d="M52 21.5A30.5 30.5 0 0 0 52 82.5"/>
+        <circle cx="52" cy="52" r="12.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <span><b>zumerlab.com</b> / index.md</span>
+  </header>
 
   <main id="main">
     <h1 class="marked"><span class="marker" aria-hidden="true">#</span>Zumerlab</h1>
