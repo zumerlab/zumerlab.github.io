@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Analytics, cookie consent and events for zumerlab.com -->
+  <script async src="/zumerlab.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy — Zumerlab</title>
+<meta name="description" content="What zumerlab.com measures with Google Analytics, the cookies it sets, how long the data is kept, and how to turn it off." />
+<meta name="author" content="Zumerlab" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b1016" media="(prefers-color-scheme: dark)" />
+<meta name="color-scheme" content="light dark" />
+<link rel="canonical" href="https://zumerlab.com/privacy.html" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #0b1016;
+    --ink-soft: #3a4654;
+    --muted: #626e7b;
+    --syntax: #7a8490;
+    --accent: #0077b8;
+    --brand: #0abdf6;
+    --rule: #e2e8ee;
+    --gutter: 2rem;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1016;
+      --ink: #eef2f6;
+      --ink-soft: #c2cbd5;
+      --muted: #8d99a6;
+      --syntax: #6f7b88;
+      --accent: #4cc9f8;
+      --rule: #1f2a35;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+  a { color: var(--accent); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 1px; }
+  h1, h2, p { margin: 0; }
+  code { font-family: var(--mono); font-size: 0.82em; color: var(--ink); }
+
+  .page {
+    max-width: 760px;
+    margin-left: clamp(24px, 5vw, 72px);
+    padding: 36px 28px 72px 0;
+  }
+  .file-path {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 42px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .file-path a { color: inherit; text-decoration: none; }
+  .file-path a:hover b { text-decoration: underline; }
+  .brand { display: inline-flex; padding: 2px; border-radius: 50%; }
+  .logo { display: block; width: 32px; height: 32px; color: var(--brand); }
+  .logo .ring { transform-origin: 52px 52px; transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1); }
+  .brand:hover .ring-outer, .brand:focus-visible .ring-outer { transform: rotate(90deg); }
+  .brand:hover .ring-inner, .brand:focus-visible .ring-inner { transform: rotate(-180deg); }
+  @media (prefers-reduced-motion: reduce) { .logo .ring { transition: none; } }
+  .file-path b { color: var(--ink-soft); font-weight: 500; }
+
+  /* Same Markdown document as the home page. */
+  .marked { position: relative; padding-left: var(--gutter); }
+  .marker {
+    position: absolute;
+    left: 0;
+    width: var(--gutter);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 400;
+  }
+  h1 {
+    font-size: clamp(36px, 4vw, 48px);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+  h1 .marker { bottom: 0.35em; }
+  .intro { margin-top: 24px; max-width: 620px; color: var(--ink-soft); }
+  .intro .marker { top: 0.12em; }
+  section { margin-top: 48px; }
+  h2 { font-size: 23px; font-weight: 650; line-height: 1.4; letter-spacing: -0.02em; }
+  h2 .marker { top: 0.35em; font-size: 14px; }
+  .points { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
+  .points li { max-width: 62ch; color: var(--ink-soft); }
+  .points .marker { top: 0; }
+  section > p.marked { margin-top: 16px; max-width: 62ch; color: var(--ink-soft); }
+  section > p.marked .marker { top: 0; }
+
+  .choice {
+    margin: 22px 0 0 var(--gutter);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .choice .label { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .choice .syntax { color: var(--syntax); }
+  .choice:hover .label { text-decoration-thickness: 2px; }
+  .choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 1px; }
+
+  footer {
+    margin: 44px 0 0 var(--gutter);
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .page { padding: 24px 24px 48px 0; }
+    .file-path { margin-bottom: 32px; font-size: 11px; gap: 10px; }
+    .logo { width: 28px; height: 28px; }
+    .intro { margin-top: 20px; }
+    section { margin-top: 38px; }
+    :root { --gutter: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="file-path">
+    <a class="brand" href="/" aria-label="Zumerlab home">
+      <svg class="logo" viewBox="0 0 104 104" fill="none" stroke="currentColor" stroke-width="7" aria-hidden="true">
+        <path class="ring ring-outer" d="M52 3.5A48.5 48.5 0 1 1 3.5 52"/>
+        <path class="ring ring-inner" d="M52 21.5A30.5 30.5 0 0 0 52 82.5"/>
+        <circle cx="52" cy="52" r="12.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <span><a href="/"><b>zumerlab.com</b></a> / privacy.md</span>
+  </header>
+
+  <main id="main">
+    <h1 class="marked"><span class="marker" aria-hidden="true">#</span>Privacy</h1>
+    <p class="intro marked"><span class="marker" aria-hidden="true">&gt;</span>zumerlab.com uses Google Analytics to see which pages, docs and demos people use, so we know what to improve. This page covers the whole site: the home page, Orbit, Orbit Kit and Zumly.</p>
+
+    <section aria-labelledby="what-title">
+      <h2 id="what-title" class="marked"><span class="marker" aria-hidden="true">##</span>What is measured</h2>
+      <ul class="points" role="list">
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>The pages you visit and how you got here: a link, a search engine, another site.</li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>What you do on them: the links and buttons you click, the demos you try, code you edit or copy in an example, how far you scroll.</li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>Your approximate location (country and city) and your browser and device, as Google Analytics reports them.</li>
+      </ul>
+      <p class="marked"><span class="marker" aria-hidden="true">&gt;</span>Nothing that names you: no forms, no accounts, no email addresses. There are no ads, and the data is not used to track you on other sites.</p>
+    </section>
+
+    <section aria-labelledby="how-title">
+      <h2 id="how-title" class="marked"><span class="marker" aria-hidden="true">##</span>Cookies and retention</h2>
+      <ul class="points" role="list">
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>Google Analytics sets two cookies, <code>_ga</code> and <code>_ga_XL52CBETDH</code>. They tell one browser from another and say nothing about who you are.</li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>Detailed event data is kept for 2 months and data tied to a browser for 14 months. After that, only totals remain.</li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>Google processes the data for us. See <a href="https://policies.google.com/privacy">Google's privacy policy</a> and <a href="https://policies.google.com/technologies/partner-sites">how Google uses data from sites that use its services</a>.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="choice-title">
+      <h2 id="choice-title" class="marked"><span class="marker" aria-hidden="true">##</span>Your choice</h2>
+      <ul class="points" role="list">
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>In the EU, the EEA, the UK and Switzerland, no analytics cookies are set until you accept the cookie banner. If you decline, nothing is stored.</li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>Elsewhere, analytics runs from the first visit, and you can turn it off here.</li>
+        <li class="marked"><span class="marker" aria-hidden="true">-</span>Your choice is saved in this browser and applies to every page of zumerlab.com. Declining also deletes the cookies above.</li>
+      </ul>
+      <button class="choice" type="button" data-cookie-settings><span class="syntax" aria-hidden="true">[</span><span class="label">Change your choice</span><span class="syntax" aria-hidden="true">]</span></button>
+    </section>
+
+    <section aria-labelledby="contact-title">
+      <h2 id="contact-title" class="marked"><span class="marker" aria-hidden="true">##</span>Questions</h2>
+      <p class="marked"><span class="marker" aria-hidden="true">&gt;</span>Write to <a href="mailto:hello@zumerlab.com">hello@zumerlab.com</a>.</p>
+    </section>
+  </main>
+
+  <footer><p><span aria-hidden="true">&lt;!-- </span>Last updated 27 October 2026.<span aria-hidden="true"> --&gt;</span></p></footer>
+</div>
+</body>
+</html>
