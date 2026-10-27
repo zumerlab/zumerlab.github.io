@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Only this robots.txt counts for all of zumerlab.com, so it lists every project's sitemap.
 Sitemap: https://zumerlab.com/sitemap.xml
+Sitemap: https://zumerlab.com/orbit/sitemap.xml
+Sitemap: https://zumerlab.com/zumly/sitemap.xml
