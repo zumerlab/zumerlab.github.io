@@ -33,6 +33,7 @@ Zumerlab maintains seven projects, grouped into libraries and tooling. The libra
 
 - [@zumer/orbit on npm](https://www.npmjs.com/package/@zumer/orbit): npm package for Orbit.
 - [zumly on npm](https://www.npmjs.com/package/zumly): npm package for Zumly.
+- [@zumer/pulse on npm](https://www.npmjs.com/package/@zumer/pulse): npm package for Pulse.
 - [@zumer/snapdom on npm](https://www.npmjs.com/package/@zumer/snapdom): npm package for SnapDOM.
 - [@zumer/snapeye on npm](https://www.npmjs.com/package/@zumer/snapeye): npm package for Snapeye.
 - [@zumer/snapdiff on npm](https://www.npmjs.com/package/@zumer/snapdiff): npm package for Snapdiff.
