@@ -8,7 +8,7 @@ Zumerlab maintains seven projects, grouped into libraries and tooling. The libra
 
 - [Orbit](https://zumerlab.com/orbit/): A CSS framework for building radial UIs — gauges, donuts, knobs, pie menus, dashboards — with CSS only. No layout JavaScript. Works with plain HTML and any framework. Drop in two files. Structure: `bigbang` (container) → `gravity-spot` (center) → `orbit-N` (ring level) → `o-progress` or `o-arc` elements. Installable via `npm install @zumer/orbit` or CDN.
 - [Zumly](https://zumerlab.com/zumly/): A JavaScript library for hierarchical zoom navigation — moving in Z (depth) through discrete views laid out in the XY plane, with spatial transitions instead of flat screen swaps. Pluggable transition drivers (CSS, WAAPI, Anime.js, GSAP, Motion, custom). Plugin API, hash router, prefetch cache. UI-agnostic. Installable via `npm install zumly`.
-- [Pulse](https://zumerlab.com/pulse/): A radial interface for monitoring and controlling systems. Each system is a circular object with its readings and controls as layers; an alert brings its layer to the front until it is resolved. A host adapter feeds it any source: Home Assistant first (as a card, a dashboard or a standalone app), a machine, a boat, a fleet, the sky. Built on Orbit and Zumly.
+- [Pulse](https://zumerlab.com/pulse/): A radial interface for monitoring and controlling systems. Each system is a circular object with its readings and controls as layers; an alert brings its layer to the front until it is resolved. A host adapter feeds it any source: the home, on Home Assistant (a card, a dashboard or a standalone app) and on openHAB (a page the server itself serves); a machine, a boat, a fleet, the sky. Built on Orbit and Zumly.
 - [SnapDOM](https://snapdom.dev/): A fast and accurate DOM-to-image capture engine. Captures any HTML element as a scalable image, preserving styles, fonts, background images, pseudo-elements, and shadow DOM. Exports to SVG, PNG, JPG, WebP, canvas, or Blob. Supports same-origin iframes, CSS counters, line-clamp. Zero dependencies. Installable via `npm install @zumer/snapdom`.
 
 ## Tooling & agents
@@ -22,7 +22,7 @@ Zumerlab maintains seven projects, grouped into libraries and tooling. The libra
 - [Orbit on GitHub](https://github.com/zumerlab/orbit): Source repository for Orbit CSS framework.
 - [Zumly on GitHub](https://github.com/zumerlab/zumly): Source repository for Zumly zoom navigation library.
 - [Pulse on GitHub](https://github.com/zumerlab/pulse): Source repository for the Pulse core and its demo.
-- [Pulse for Home Assistant on GitHub](https://github.com/zumerlab/pulse-home): The Home Assistant card, dashboard and standalone app on Pulse.
+- [Pulse for the home on GitHub](https://github.com/zumerlab/pulse-home): Pulse over Home Assistant (a card, a dashboard, a section or a standalone app) and over openHAB (a page the server itself serves).
 - [SnapDOM on GitHub](https://github.com/zumerlab/snapdom): Source repository for SnapDOM capture engine.
 - [Snapeye on GitHub](https://github.com/zumerlab/snapeye): Source repository for Snapeye capture, comparison, and recording tools.
 - [Snapdiff on GitHub](https://github.com/zumerlab/snapdiff): Source repository for Snapdiff visual regression testing.
