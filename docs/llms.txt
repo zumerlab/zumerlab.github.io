@@ -19,11 +19,12 @@ Zumerlab maintains seven projects, grouped into libraries and tooling. The libra
 
 ## Agent skills
 
-Each library ships a skill: a SKILL.md that teaches a coding agent to use it correctly. Install one with `npx skills add zumerlab/orbit` (or `zumerlab/zumly`, `zumerlab/pulse`), or in Claude Code with `/plugin install orbit --marketplace zumerlab/orbit` (or `zumly`, `pulse`; the catalog for the three lives in the Orbit repository). The skills also ship inside the npm packages, under `skills/`.
+Each library ships a skill: a SKILL.md that teaches a coding agent to use it correctly. Install one with `npx skills add zumerlab/orbit` (or `zumerlab/zumly`, `zumerlab/pulse`, `zumerlab/snapdom`), or in Claude Code with `/plugin install orbit --marketplace zumerlab/orbit` (or `zumly`, `pulse`, `snapdom`; the catalog for the four lives in the Orbit repository). The skills also ship inside the npm packages, under `skills/`.
 
 - [Orbit skill](https://raw.githubusercontent.com/zumerlab/orbit/main/skills/orbit/SKILL.md): The Orbit 2 model, the required structure, tested recipes and common mistakes. [About it](https://zumerlab.com/orbit/agents.html).
 - [Zumly skill](https://raw.githubusercontent.com/zumerlab/zumly/main/skills/zumly/SKILL.md): What Zumly is for, the markup contract, options, methods, events, drivers and the router. [About it](https://zumerlab.com/zumly/agents.html).
 - [Pulse skill](https://raw.githubusercontent.com/zumerlab/pulse/main/skills/pulse/SKILL.md): The Pulse model, a tested example and the host contract. [About it](https://zumerlab.com/pulse/agents.html).
+- [SnapDOM skill](https://raw.githubusercontent.com/zumerlab/snapdom/main/skills/snapdom/SKILL.md): The capture-then-export model, the real options and defaults, the plugin packages and common mistakes. [About it](https://snapdom.dev/docs/agents/).
 
 ## Source code
 
