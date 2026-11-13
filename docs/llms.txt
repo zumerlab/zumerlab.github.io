@@ -2,7 +2,7 @@
 
 > Zumerlab is an independent software lab building open-source tools for the web. The projects are MIT-licensed, with source and documentation on GitHub.
 
-Zumerlab maintains seven projects, grouped into libraries and tooling. The libraries are **Orbit** (CSS framework for radial UIs), **Zumly** (hierarchical zoom navigation), **Pulse** (a radial interface for monitoring and controlling systems, built on Orbit and Zumly) and **SnapDOM** (DOM-to-image capture). The tooling is **Snapeye** (capture, compare, and record for coding agents), **Snapdiff** (client-side visual regression testing), and **SnapSurf** (web navigation and verification for AI agents). Snapeye and Snapdiff are built on SnapDOM. Each project ships with source, and the libraries also ship live demos and documentation. They are designed to work with plain HTML and any framework (React, Vue, Svelte), and to be readable by both humans and agents.
+Zumerlab maintains eight projects, grouped into libraries and tooling. The libraries are **Orbit** (CSS framework for radial UIs), **Zumly** (hierarchical zoom navigation), **Pulse** (a radial interface for monitoring and controlling systems, built on Orbit and Zumly) and **SnapDOM** (DOM-to-image capture). The tooling is **SnapStudio** (a free Chrome extension that captures any part of a web page, built on SnapDOM), **Snapeye** (capture, compare, and record for coding agents), **Snapdiff** (client-side visual regression testing), and **SnapSurf** (web navigation and verification for AI agents). SnapStudio, Snapeye and Snapdiff are built on SnapDOM. SnapStudio is distributed through the Chrome Web Store; each of the other projects ships with source, and the libraries also ship live demos and documentation. They are designed to work with plain HTML and any framework (React, Vue, Svelte), and to be readable by both humans and agents.
 
 ## Libraries
 
@@ -13,6 +13,7 @@ Zumerlab maintains seven projects, grouped into libraries and tooling. The libra
 
 ## Tooling & agents
 
+- [SnapStudio](https://snapdom.dev/snapstudio/): The official SnapDOM extension for Chrome. Opens in a side panel, captures an element, a region, the visible area or the full page, and saves it as an image, a PDF, an editable SVG, a Figma paste, a GIF or a video, with no code. Collects no data; captures are made in the browser. Free on the [Chrome Web Store](https://chromewebstore.google.com/detail/snapstudio/alhbgenkncnogdpfgjbldjgohhfodohm).
 - [Snapeye](https://github.com/zumerlab/snapeye): Capture, compare, and record a running web app for coding agents. Saves images, visual diffs, and recordings to disk. Built on SnapDOM and Snapdiff. Installable via `npm install @zumer/snapeye`.
 - [Snapdiff](https://github.com/zumerlab/snapdiff): Client-side visual regression testing powered by SnapDOM. Capture components in the browser, compare against baselines, and catch unintended visual changes without a headless cluster. Built on SnapDOM. Installable via `npm install @zumer/snapdiff`.
 - [SnapSurf](https://github.com/zumerlab/snapsurf): Browser automation, semantic page snapshots, action-level diffs, and assertions for AI agents using MCP/browser-style tool calls. Built on SnapDOM. Installable via `npm install @zumer/snapsurf`.
